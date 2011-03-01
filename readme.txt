@@ -4,6 +4,9 @@ Copyright 2011, David S. Read
 
 Sequence Hunt is a decoding game that challenges the player to determine
 a sequence of colors within a fixed number of tries.
+
+The source code for Sequence Hunt is located on github at:
+https://github.com/DaveRead/SequenceHunt
  
 Sequence Hunt is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by

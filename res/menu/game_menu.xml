@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/howtoplay" android:id="@+id/howtoplay"></item><item android:title="@string/setup" android:id="@+id/setup"></item><item android:id="@+id/about" android:title="@string/about"></item>
+    
+    <item android:id="@+id/new_game"
+          android:title="@string/new_game" ></item>
+    <item android:id="@+id/quit"
+          android:title="@string/quit" ></item><item android:title="@string/license" android:id="@+id/license"></item>
+              
+              
+    <item android:id="@+id/stats" android:title="@string/stats"></item><item android:id="@+id/history" android:title="@string/history"></item><item android:title="@string/debug" android:id="@+id/debug"></item>
+    
+
+
+
+
+
+
+</menu>

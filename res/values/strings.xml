@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="internals">Internals</string>
+    <string name="howtoplay">How to Play</string>
+    <string name="app_name">Sequence Hunt</string>
+    <string name="setup">Setup</string>
+    <string name="new_game">New Game</string>
+    <string name="quit">Quit</string>
+    <string name="about">About</string>
+    <string name="license">License</string>
+    <string name="stats">Statistics</string>
+    <string name="history">History</string>
+    <string name="debug">Debug Info</string>
+</resources>
