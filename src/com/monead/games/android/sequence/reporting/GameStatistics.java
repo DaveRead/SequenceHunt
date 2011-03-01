@@ -72,7 +72,7 @@ public class GameStatistics implements Serializable {
 			gameHistory.remove(0);
 		}
 		gameCount++;
-		gameHistory.add(gameCount + "," + model.getAnswerValue() + "," + model.getAnswerText());
+		gameHistory.add(gameCount + "," + model.getAnswerValue());
 	}
 	
 	/**

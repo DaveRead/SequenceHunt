@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-     <TextView android:id="@+id/label" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:textColor="#c0c0ff"
-              android:textSize="20sp"
-              android:textStyle="bold" 
-              android:text="Difficulty Level" />
-    
-    <RadioGroup
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-      <RadioButton android:id="@+id/radio_easy"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Easy" />
-      <RadioButton android:id="@+id/radio_hard"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Hard" />
-    </RadioGroup>
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    <Button android:id="@+id/button_save"
-            android:layout_width="wrap_content"
+		android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" >
+	<TextView android:id="@+id/label" 
+    		android:layout_width="fill_parent" 
             android:layout_height="wrap_content"
-            android:text="Save" />
-    <Button android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
-        
-  </LinearLayout>
+            android:textColor="#c0c0ff"
+            android:textSize="20sp"
+            android:textStyle="bold" 
+            android:text="@string/title_setup" />
+            
+    <RadioGroup android:layout_width="fill_parent"
+      		android:layout_height="wrap_content"
+      		android:orientation="vertical">
+		<RadioButton android:id="@+id/radio_easy"
+        		android:layout_width="wrap_content"
+          		android:layout_height="wrap_content"
+          		android:text="@string/radiobutton_easy" />
+      	<RadioButton android:id="@+id/radio_hard"
+          		android:layout_width="wrap_content"
+          		android:layout_height="wrap_content"
+          		android:text="@string/radiobutton_hard" />
+	</RadioGroup>
+	
+  	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		android:orientation="horizontal"
+    		android:layout_width="fill_parent"
+    		android:layout_height="fill_parent" >
+    	<Button android:id="@+id/button_save"
+         		android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="@string/button_save" />
+    	<Button android:id="@+id/button_cancel"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="@string/button_cancel" />       
+  	</LinearLayout>
 </LinearLayout>

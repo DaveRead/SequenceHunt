@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.monead.games.android.sequence.R;
+
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -229,20 +232,20 @@ public class SequenceHuntGameModel implements Serializable {
 	 * 
 	 * @return A text message with color counts
 	 */
-	public String reportColorCounts() {
+	public String reportColorCounts(Context context) {
 		StringBuffer report = new StringBuffer();
 
-		report.append("Black: " + colorCounts.get(COLOR_BLACK));
+		report.append(context.getResources().getString(R.string.color_black) + ": " + colorCounts.get(COLOR_BLACK));
 		report.append('\n');
-		report.append("Blue: " + colorCounts.get(COLOR_BLUE));
+		report.append(context.getResources().getString(R.string.color_blue) + ": " + colorCounts.get(COLOR_BLUE));
 		report.append('\n');
-		report.append("Green: " + colorCounts.get(COLOR_GREEN));
+		report.append(context.getResources().getString(R.string.color_green) + ": " + colorCounts.get(COLOR_GREEN));
 		report.append('\n');
-		report.append("Red: " + colorCounts.get(COLOR_RED));
+		report.append(context.getResources().getString(R.string.color_red) + ": " + colorCounts.get(COLOR_RED));
 		report.append('\n');
-		report.append("White: " + colorCounts.get(COLOR_WHITE));
+		report.append(context.getResources().getString(R.string.color_white) + ": " + colorCounts.get(COLOR_WHITE));
 		report.append('\n');
-		report.append("Yellow: " + colorCounts.get(COLOR_YELLOW));
+		report.append(context.getResources().getString(R.string.color_yellow) + ": " + colorCounts.get(COLOR_YELLOW));
 
 		return report.toString();
 	}
@@ -401,7 +404,7 @@ public class SequenceHuntGameModel implements Serializable {
 	 * 
 	 * @return Text description of the generated sequence
 	 */
-	public String getAnswerText() {
+	public String getAnswerText(Context context) {
 		String answerText;
 		String colorName;
 
@@ -410,25 +413,25 @@ public class SequenceHuntGameModel implements Serializable {
 		for (int posit = 0; posit < SEQUENCE_LENGTH; ++posit) {
 			switch (answer[posit]) {
 				case COLOR_BLACK:
-					colorName = "Black";
+					colorName = context.getResources().getString(R.string.color_black);
 					break;
 				case COLOR_BLUE:
-					colorName = "Blue";
+					colorName = context.getResources().getString(R.string.color_blue);
 					break;
 				case COLOR_GREEN:
-					colorName = "Green";
+					colorName = context.getResources().getString(R.string.color_green);
 					break;
 				case COLOR_RED:
-					colorName = "Red";
+					colorName = context.getResources().getString(R.string.color_red);
 					break;
 				case COLOR_WHITE:
-					colorName = "White";
+					colorName = context.getResources().getString(R.string.color_white);
 					break;
 				case COLOR_YELLOW:
-					colorName = "Yellow";
+					colorName = context.getResources().getString(R.string.color_yellow);
 					break;
 				default:
-					colorName = "Unknown (" + answer[posit] + ")";
+					colorName = context.getResources().getString(R.string.color_unknown) + " (" + answer[posit] + ")";
 					break;
 			}
 			if (answerText.length() > 0) {

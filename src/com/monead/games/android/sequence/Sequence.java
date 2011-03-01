@@ -163,14 +163,19 @@ public class Sequence extends Activity implements OnTouchListener {
 			programVersion = pi.versionName;
 		}
 		catch (Throwable throwable) {
-			Log.e(className, "Unable to retrieve program name or version name",
+			Log.e(className,
+					getResources().getString(
+							R.string.errormessage_program_or_version_name),
 					throwable);
-			programName = "Undefined";
-			programVersion = "Undefined";
+			programName = getResources().getString(R.string.message_undefined);
+			programVersion = getResources().getString(
+					R.string.message_undefined);
 		}
 
-		Log.d(className, "setup loading program name and version name: "
-				+ programName + ", " + programVersion);
+		Log.d(className,
+				getResources().getString(
+						R.string.message_report_program_and_version_names)
+						+ ": " + programName + ", " + programVersion);
 
 		gameBoard.setDifficultyToHard(settings
 				.getBoolean(PREF_MODE_HARD, false));
@@ -244,7 +249,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	/**
 	 * Presents the help screen to the user.
 	 * 
-	 * TODO Move help text to a file
+	 * TODO Internationalize the instructions
 	 * 
 	 * This screen contains instructions for game play and operation.
 	 */
@@ -258,6 +263,8 @@ public class Sequence extends Activity implements OnTouchListener {
 
 	/**
 	 * Presents the license screen to the user.
+	 * 
+	 * TODO Are there internationalized versions of the Afferno license text?
 	 * 
 	 * This screen displays the software license
 	 */
@@ -289,7 +296,10 @@ public class Sequence extends Activity implements OnTouchListener {
 			editor.commit();
 		}
 		catch (Throwable throwable) {
-			Log.e(className, "Failed to write model", throwable);
+			Log.e(className,
+					getResources().getString(
+							R.string.errormessage_model_write_failed),
+					throwable);
 		}
 		finally {
 			if (out != null) {
@@ -297,7 +307,10 @@ public class Sequence extends Activity implements OnTouchListener {
 					out.close();
 				}
 				catch (Throwable throwable) {
-					Log.e(className, "Failed to close output model file",
+					Log.e(className,
+							getResources()
+									.getString(
+											R.string.errormessage_model_output_file_close_failed),
 							throwable);
 				}
 			}
@@ -324,7 +337,10 @@ public class Sequence extends Activity implements OnTouchListener {
 				}
 			}
 			catch (Throwable throwable) {
-				Log.w(className, "Failed to load model", throwable);
+				Log.w(className,
+						getResources().getString(
+								R.string.errormessage_model_read_failed),
+						throwable);
 			}
 			finally {
 				if (in != null) {
@@ -332,7 +348,10 @@ public class Sequence extends Activity implements OnTouchListener {
 						in.close();
 					}
 					catch (Throwable throwable) {
-						Log.e(className, "Failed to close input model file",
+						Log.e(className,
+								getResources()
+										.getString(
+												R.string.errormessage_model_input_file_close_failed),
 								throwable);
 					}
 				}
@@ -352,7 +371,10 @@ public class Sequence extends Activity implements OnTouchListener {
 			out.writeObject(gameStatistics);
 		}
 		catch (Throwable throwable) {
-			Log.e(className, "Failed to write game statistics", throwable);
+			Log.e(className,
+					getResources().getString(
+							R.string.errormessage_stats_write_failed),
+					throwable);
 		}
 		finally {
 			if (out != null) {
@@ -361,7 +383,9 @@ public class Sequence extends Activity implements OnTouchListener {
 				}
 				catch (Throwable throwable) {
 					Log.e(className,
-							"Failed to close game statistics output file",
+							getResources()
+									.getString(
+											R.string.errormessage_stats_output_file_close_failed),
 							throwable);
 				}
 			}
@@ -380,7 +404,9 @@ public class Sequence extends Activity implements OnTouchListener {
 			gameStatistics = (GameStatistics) in.readObject();
 		}
 		catch (Throwable throwable) {
-			Log.w(className, "Failed to load game statistics", throwable);
+			Log.w(className,
+					getResources().getString(
+							R.string.errormessage_stats_read_failed), throwable);
 			gameStatistics = new GameStatistics();
 		}
 		finally {
@@ -390,7 +416,9 @@ public class Sequence extends Activity implements OnTouchListener {
 				}
 				catch (Throwable throwable) {
 					Log.e(className,
-							"Failed to close input game statistics file",
+							getResources()
+									.getString(
+											R.string.errormessage_stats_input_file_close_failed),
 							throwable);
 				}
 			}
@@ -414,7 +442,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.howtoplay:
+			case R.id.how_to_play:
 				showHelpScreen();
 				return true;
 			case R.id.setup:
@@ -479,9 +507,8 @@ public class Sequence extends Activity implements OnTouchListener {
 	/**
 	 * Display the list of historical color choices
 	 * 
-	 * This may be used to collect data in order
-	 * to test the randomness of the internal 
-	 * random number generator
+	 * This may be used to collect data in order to test the randomness of the
+	 * internal random number generator
 	 */
 	private void showHistory() {
 		setContentView(R.layout.history);
@@ -490,8 +517,8 @@ public class Sequence extends Activity implements OnTouchListener {
 		TextView history = (TextView) findViewById(R.id.history);
 		((Button) findViewById(R.id.button_clipboard))
 				.setOnClickListener(historyClipboardClick);
-		history.setText("Version: " + programVersion + "\n"
-				+ gameStatistics.reportHistoryCSV());
+		history.setText(getResources().getString(R.string.label_version) + ": "
+				+ programVersion + "\n" + gameStatistics.reportHistoryCSV());
 	}
 
 	/**
@@ -512,16 +539,22 @@ public class Sequence extends Activity implements OnTouchListener {
 		switch (id) {
 			case DIALOG_WIN:
 				builder = new AlertDialog.Builder(this);
-				builder.setMessage("Congratulations, You Win!\n\nPlay Again?")
+				builder.setMessage(
+						getResources().getString(R.string.message_win)
+								+ "\n\n"
+								+ getResources().getString(
+										R.string.question_play_again))
 						.setCancelable(false)
-						.setPositiveButton("Yes",
+						.setPositiveButton(
+								getResources().getString(R.string.button_yes),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
 										Sequence.this.startNewGame();
 									}
 								})
-						.setNegativeButton("No",
+						.setNegativeButton(
+								getResources().getString(R.string.button_no),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
@@ -532,16 +565,22 @@ public class Sequence extends Activity implements OnTouchListener {
 				break;
 			case DIALOG_LOSE:
 				builder = new AlertDialog.Builder(this);
-				builder.setMessage("Sorry, You Lost!\n\nPlay Again?")
+				builder.setMessage(
+						getResources().getString(R.string.message_lose)
+								+ "\n\n"
+								+ getResources().getString(
+										R.string.question_play_again))
 						.setCancelable(false)
-						.setPositiveButton("Yes",
+						.setPositiveButton(
+								getResources().getString(R.string.button_yes),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
 										Sequence.this.startNewGame();
 									}
 								})
-						.setNegativeButton("No",
+						.setNegativeButton(
+								getResources().getString(R.string.button_no),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
@@ -554,11 +593,15 @@ public class Sequence extends Activity implements OnTouchListener {
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage(
 						programName
-								+ "\nVersion: "
+								+ "\n"
+								+ getResources().getString(
+										R.string.label_version)
+								+ ": "
 								+ programVersion
 								+ "\n\nDavid Read\nDavid.Read@monead.com\nwww.monead.com\n\nThe source code is located at: https://github.com/DaveRead/SequenceHunt\n\nThis program is free software released under the GNU Affero General Public License.  See the License menu option for the full license.")
 						.setCancelable(true)
-						.setNegativeButton("Close",
+						.setNegativeButton(
+								getResources().getString(R.string.button_close),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
@@ -570,9 +613,11 @@ public class Sequence extends Activity implements OnTouchListener {
 			case DIALOG_STATS:
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage(
-						"Color choice statistics\n(testing our randomness)\n")
+						getResources().getString(
+								R.string.label_color_statistics))
 						.setCancelable(true)
-						.setNeutralButton("Close",
+						.setNeutralButton(
+								getResources().getString(R.string.button_close),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
@@ -583,9 +628,12 @@ public class Sequence extends Activity implements OnTouchListener {
 				break;
 			case DIALOG_INFO:
 				builder = new AlertDialog.Builder(this);
-				builder.setMessage("Runtime information\n")
+				builder.setMessage(
+						getResources().getString(
+								R.string.label_runtime_information))
 						.setCancelable(true)
-						.setNeutralButton("Close",
+						.setNeutralButton(
+								getResources().getString(R.string.button_close),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
@@ -609,15 +657,21 @@ public class Sequence extends Activity implements OnTouchListener {
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
 		switch (id) {
 			case DIALOG_LOSE:
-				((AlertDialog) dialog)
-						.setMessage("Sorry, You Lost.\nThe pattern was:\n"
-								+ gameBoard.getModel().getAnswerText()
-								+ "\n\nPlay Again?");
+				((AlertDialog) dialog).setMessage(getResources().getString(
+						R.string.message_lose)
+						+ "\n"
+						+ getResources()
+								.getString(R.string.message_pattern_was)
+						+ ":\n"
+						+ gameBoard.getModel().getAnswerText(this)
+						+ "\n\n"
+						+ getResources()
+								.getString(R.string.question_play_again));
 				break;
 			case DIALOG_STATS:
-				((AlertDialog) dialog)
-						.setMessage("Color choice statistics\n(testing our randomness)\n\n"
-								+ gameBoard.getModel().reportColorCounts());
+				((AlertDialog) dialog).setMessage(getResources().getString(
+						R.string.label_color_statistics)
+						+ "\n\n" + gameBoard.getModel().reportColorCounts(this));
 				break;
 			case DIALOG_INFO:
 				StringBuffer info;
@@ -626,11 +680,11 @@ public class Sequence extends Activity implements OnTouchListener {
 					info.append(detail);
 					info.append('\n');
 				}
-				((AlertDialog) dialog).setMessage("Runtime information\n\n"
-						+ info.toString());
+				((AlertDialog) dialog).setMessage(getResources().getString(
+						R.string.label_runtime_information)
+						+ "\n\n" + info.toString());
 				break;
 		}
-
 	}
 
 	/**
@@ -729,12 +783,8 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener setupSaveClick = new OnClickListener() {
 		public void onClick(View v) {
-
-			Log.d(className, "Save Click received: " + v);
 			RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
-
 			setDifficultyToHard(hard.isChecked());
-
 			setContentView(gameBoard);
 			gameBoardIsDisplayed = true;
 		}
@@ -745,9 +795,6 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener setupCancelClick = new OnClickListener() {
 		public void onClick(View v) {
-
-			Log.d(className, "Cancel Click received: " + v);
-
 			setContentView(gameBoard);
 			gameBoardIsDisplayed = true;
 		}
@@ -758,9 +805,6 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener helpDoneClick = new OnClickListener() {
 		public void onClick(View v) {
-
-			Log.d(className, "Done Click received: " + v);
-
 			setContentView(gameBoard);
 			gameBoardIsDisplayed = true;
 		}
@@ -771,11 +815,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener historyClipboardClick = new OnClickListener() {
 		public void onClick(View v) {
-
-			Log.d(className, "History Clipboard Click received: " + v);
-
 			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
 			clipboard.setText(gameStatistics.reportHistoryCSV());
 		}
 	};
