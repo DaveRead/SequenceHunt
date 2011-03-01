@@ -2,8 +2,9 @@ Sequence Hunt
 
 Copyright 2011, David S. Read
 
-Sequence Hunt is a decoding game that challenges the player to determine
-a sequence of colors within a fixed number of tries.
+Sequence Hunt is a decoding game for the android platform
+that challenges the player to determine a sequence of 
+colors within a fixed number of tries.
 
 The source code for Sequence Hunt is located on github at:
 https://github.com/DaveRead/SequenceHunt
