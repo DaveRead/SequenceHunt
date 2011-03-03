@@ -91,7 +91,19 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private static final String PREF_USE_SAVED_MODEL = "UseSavedModel";
 
-	// Dialogs for the dialogs
+	/**
+	 * Key for persisting whether this is the first use of this application
+	 */
+	private static final String PREF_FIRST_USE = "FirstUseFlagValue";
+
+	/**
+	 * A value that is stored as indicating first use If a major version change
+	 * necessitates having the first use screen appear again to upgrade users
+	 * then this value should be changed.
+	 */
+	private final static String FIRST_USE_FLAG_VALUE = "B";
+
+	// Constants for the dialogs
 	private static final int DIALOG_WIN = 1;
 	private static final int DIALOG_LOSE = 2;
 	private static final int DIALOG_STATS = 3;
@@ -142,8 +154,51 @@ public class Sequence extends Activity implements OnTouchListener {
 		loadModel();
 		setup();
 		gameBoard.setOnTouchListener(this);
-		setContentView(gameBoard);
-		gameBoardIsDisplayed = true;
+
+		if (firstUse()) {
+			setupForFirstUse();
+		} else {
+			setContentView(gameBoard);
+			gameBoardIsDisplayed = true;
+		}
+	}
+
+	/**
+	 * Display the first use screen
+	 */
+	private void setupForFirstUse() {
+		setContentView(R.layout.first_use);
+		gameBoardIsDisplayed = false;
+
+		((Button) findViewById(R.id.button_read_instructions))
+				.setOnClickListener(firstUseReadInstructionsClick);
+		((Button) findViewById(R.id.button_play))
+				.setOnClickListener(firstUsePlayClick);
+	}
+
+	/**
+	 * Determine if this is the first use of this application If so, record the
+	 * fact that first use has occurred
+	 * 
+	 * @return Whether the first use screen should appear
+	 */
+	private boolean firstUse() {
+		boolean isFirstUse;
+
+		SharedPreferences settings = getSharedPreferences(
+				PREFERENCES_FILE_NAME, MODE_PRIVATE);
+
+		isFirstUse = false;
+
+		if (!settings.getString(PREF_FIRST_USE, "")
+				.equals(FIRST_USE_FLAG_VALUE)) {
+			isFirstUse = true;
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString(PREF_FIRST_USE, FIRST_USE_FLAG_VALUE);
+			editor.commit();
+		}
+
+		return isFirstUse;
 	}
 
 	/**
@@ -259,6 +314,9 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		WebView instructions = (WebView) findViewById(R.id.instructions);
 		instructions.loadUrl("file:///android_asset/help/instructions.html");
+
+		((Button) findViewById(R.id.button_close))
+				.setOnClickListener(helpDoneClick);
 	}
 
 	/**
@@ -669,9 +727,11 @@ public class Sequence extends Activity implements OnTouchListener {
 								.getString(R.string.question_play_again));
 				break;
 			case DIALOG_STATS:
-				((AlertDialog) dialog).setMessage(getResources().getString(
-						R.string.label_color_statistics)
-						+ "\n\n" + gameBoard.getModel().reportColorCounts(this));
+				((AlertDialog) dialog)
+						.setMessage(getResources().getString(
+								R.string.label_color_statistics)
+								+ "\n\n"
+								+ gameBoard.getModel().reportColorCounts(this));
 				break;
 			case DIALOG_INFO:
 				StringBuffer info;
@@ -817,6 +877,25 @@ public class Sequence extends Activity implements OnTouchListener {
 		public void onClick(View v) {
 			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 			clipboard.setText(gameStatistics.reportHistoryCSV());
+		}
+	};
+
+	/**
+	 * Inner class to handle first use read instructions request
+	 */
+	private OnClickListener firstUseReadInstructionsClick = new OnClickListener() {
+		public void onClick(View v) {
+			showHelpScreen();
+		}
+	};
+
+	/**
+	 * Inner class to handle first use play game request
+	 */
+	private OnClickListener firstUsePlayClick = new OnClickListener() {
+		public void onClick(View v) {
+			setContentView(gameBoard);
+			gameBoardIsDisplayed = true;
 		}
 	};
 }

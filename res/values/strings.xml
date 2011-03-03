@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_app_name">Sequence Hunt</string>
+    <string name="title_welcome">Welcome to Sequence Hunt!</string>
     <string name="title_how_to_play">Instructions for Game Play</string>
     <string name="title_history">History</string>
     <string name="title_license">License</string>
     <string name="title_setup">Difficulty Level</string>
+    <string name="message_welcome">Thank you for installing Sequence Hunt.  If you have any issues with its operation or suggestions for improvements please do not hesitate to contact me (David Read, David.Read@monead.com).  Contact information also found using the \'About\' menu.\n\nInstructions may be viewed at any time by bringing up the game\'s menu and selecting the \'How to Play\' option.\n\nWould you like to begin playing or read the instructions?\n\n</string> 
     <string name="message_undefined">undefined</string>
     <string name="message_win">Congratulations!  You Won!</string>
     <string name="message_lose">Sorry, you lost!</string>
@@ -16,6 +18,8 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_close">Close</string>
     <string name="button_copy_to_clipboard">Copy to Clipboard</string>
+    <string name="button_play">Play</string>
+    <string name="button_read_instructions">Read Instructions</string>
     <string name="color_black">Black</string>
     <string name="color_blue">Blue</string>
     <string name="color_green">Green</string>
@@ -35,7 +39,7 @@
     <string name="menu_history">History</string>
     <string name="menu_debug">Debug Info</string>
     <string name="label_version">Version</string>
-    <string name="label_color_statistics">Color choice statistics (testing our randomness)</string>
+    <string name="label_color_statistics">Color choice statistics\n(testing our randomness)</string>
     <string name="label_runtime_information">Runtime Information</string>
     <string name="message_report_program_and_version_names">Retrieved program name and version name</string>
     <string name="errormessage_program_or_version_name">Unable to retrieve program name or version name</string>
