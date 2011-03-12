@@ -22,7 +22,12 @@
             	android:text="@string/button_copy_to_clipboard" />
   	</LinearLayout>
     
-    <TextView android:id="@+id/history" 
-    		android:layout_width="fill_parent" 
-   			android:layout_height="fill_parent"/>
+    <ScrollView android:layout_width="fill_parent" 
+   			android:layout_height="wrap_content"
+   			android:fadeScrollbars="false"
+          	android:scrollbars="vertical">
+    	<TextView android:id="@+id/history" 
+    			android:layout_width="fill_parent" 
+   				android:layout_height="wrap_content"/>
+    </ScrollView>
 </LinearLayout>
