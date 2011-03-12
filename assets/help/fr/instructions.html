@@ -1,0 +1,136 @@
+<html>
+
+<body bgcolor="#ccffcc">
+
+<font color="#102010">
+
+<hr/>
+<p>(Note de traduction:.. Je m'excuse pour les fautes de 
+grammaire que je ne suis pas un locuteur natif de cette 
+langue si je me suis appuyé sur un programme de traduction 
+Si vous avez des suggestions pour améliorer le vocabulaire 
+et la grammaire dans le jeu, je vous serais reconnaissant 
+de me le faire savoir. Je vous remercie.)</p>
+<hr/>
+
+<h1>Objectif</h1>
+
+<p><strong>Sequence Hunt</strong> 
+le joueur doit trouver une séquence de couleurs.
+Chaque tentative de deviner la séquence est appelée <strong>Essayer</strong>.
+Il ya quatre positions et chaque poste peut avoir une quelconque des
+six couleurs en elle (noir, bleu, vert, rouge, blanche ou jaune).
+Une couleur peut apparaître plus d'une fois et évidemment pas toutes les couleurs
+seront utilisés dans une séquence donnée.</p>
+<p>Le jeu permet jusqu'à 10
+essaye de trouver la séquence. Chaque essai est représenté comme une rangée de
+quatre cercles. En réponse à un essai, le lecteur est fourni avec
+des indices pour aider à identifier les couleurs correctes et incorrectes et
+positions pour que les essayer. Voir le <strong><em>Indices</em></strong>
+section d'information sur la compréhension des significations indice.</p>
+
+<h1>Les tentatives</h1>
+
+<p>Le joueur entre dans un schéma de couleurs (rappelez-vous, une couleur peut
+être utilisé plus d'une fois) que suppose son. Une fois une couleur a
+été saisies dans chaque position sur la ligne de la proposition peut être
+soumis. Une fois soumis, les indices seront affichés.</p>
+<p>Pour entrer une couleur, le joueur clique sur l'une ou l'autre des 6
+cercles de couleur au bas de la carte ou utilise le clavier
+pour entrer une lettre représentant une couleur.</p>
+
+<center>
+<table border="1">
+<tr><th>Couleur</th><th>Lettre</th></tr>
+<tr><td align="center">Blanche</td><td align="center">B</td></tr>
+<tr><td align="center">Bleu</td><td align="center">L</td></tr>
+<tr><td align="center">Jaune</td><td align="center">J</td></tr>
+<tr><td align="center">Noir</td><td align="center">N</td></tr>
+<tr><td align="center">Rouge</td><td align="center">R</td></tr>
+<tr><td align="center">Vert</td><td align="center">V</td></tr>
+</table>
+</center>
+
+<p>Si une erreur est commise lorsque l'utilisateur entre deviner son, le
+supprimer la clé ou le supprimer le symbole (voir image ci-dessous) à la
+bas de la planche de jeu peut être utilisé pour éliminer les conjectures
+(avant de soumettre la tentative).</p>
+
+<p>La tentative est présentée par
+appuyant sur la touche Entrée ou la soumettre symbole (voir image ci-dessous) à la
+bas de la planche de jeu.</p>
+
+<center>
+<table border="1">
+<tr><th>Image</th><th>Signification</th></tr>
+<tr><td align="center"><img src="../delete_entry.png" alt="deuxième à droite"/></td><td >Supprimer entrée de couleur</td></tr>
+<tr><td align="center"><img src="../submit_try.png" alt="Complètement à droite sur l'image"/></td><td >Soumettre tentative</td></tr>
+</table>
+</center>
+
+<h1>Indices</h1>
+
+<p>Les indices sont
+rapport à la gauche de chaque ligne essayer. Quand une couleur deviné
+se trouve dans la position correcte l'indice sera un diamant.
+Par conséquent, l'objectif ultime du joueur (le gagnant) est
+pour obtenir tous les indices de faire rapport d'un diamant.</p>
+<p>Si une couleur correcte
+est utilisé, mais dans la mauvaise position d'un triangle est représenté. Si l'
+la couleur est incorrect, un cercle avec un «X» par le biais, il est
+montré. Comme il ya quatre positions de couleur dans une
+séquence, il y aura quatre indices.</p>
+
+<h2>Formes Indice</h2>
+<table border="1">
+<tr><th>Forme</th><th>Signification</th></tr>
+<tr><td valign="center" align="center"><img src="../correct.png" alt="Diamant"/></td>
+<td>Un losange indique qu'il ya une couleur dans la bonne position</td></tr>
+<tr><td valign="center" align="center"><img src="../incorrect_position.png" alt="Triangle"/></td>
+<td>Un triangle indique que la couleur ne se produisent dans la séquence, mais dans une position différente</td></tr>
+<tr><td valign="center" align="center"><img src="../incorrect.png" alt="Cercle avec un «X» en lui"/></td>
+<td>Le cercle avec un «X» à travers elle indique que la couleur ne se produit pas (encore) dans la séquence</td></tr>
+</table>
+
+<p>Selon le niveau de difficulté du jeu
+(voir le <strong><em>Niveau de difficulté</em></strong>)
+les indices apparaissent dans l'un des deux modes.</p>
+
+<h2>Facile</h2>
+
+<p>Si le niveau de difficulté est réglé sur <strong>facile</strong>, puis
+les indices de diamant et d'un triangle sera rempli avec leurs
+associés couleurs. Par exemple, si un diamant rouge est déployé,
+cela signifie que l'un des conjectures rouge est dans la position correcte.
+Si un triangle jaune ont été présentés, cela signifierait que d'un jaune
+conjecture était dans la mauvaise position dans la rangée.</p>
+
+<h2>Difficile</h2>
+
+<p>Si le niveau de difficulté est réglé sur <strong>Difficile</strong>, puis
+les indices sont toujours gris, en ajoutant un défi pour figurer sur
+les couleurs et les positions sont correctes et incorrectes.</p>
+
+<h1>Niveau de difficulté</h1>
+
+<p>Utilisez le menu pour sélectionner <strong>configurer</strong>. Cela permet
+le lecteur pour basculer entre <strong>facile</strong>
+et <strong>Difficile</strong> niveaux de difficulté
+(voir le <strong><em>indices</em></strong> pour
+de détails sur le but de ce réglage).</p>
+
+<a name="samples"/>
+<h1>Exemples de jeux</h1>
+
+<p>Jeux d'exemples illustrent une série de tentatives et d'expliquer les indices et
+le raisonnement suivi pour trouver la séquence correcte.</p>
+<ul>
+<li><a href="samplegame_easy.html">Jeu Facile d'exemples de difficulté</a>
+<li><a href="samplegame_hard.html">Match difficile exemples difficulté</a>
+</ul>
+
+</font>
+
+</body>
+
+</html>

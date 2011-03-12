@@ -1,0 +1,88 @@
+<html>
+
+<body bgcolor="#ccffcc">
+<hr>
+<a href="instructions.html#samples">Retour aux instructions</a>
+<hr>
+
+<h1>Sequence Hunt - Exemple de jeu</h1>
+<h2>Difficulté: Difficile</h2>
+
+<p>Avec la difficulté à définir difficile, les indices ne seront pas indiquer les
+couleur associée à la forme. Cela rend la détermination
+si les couleurs font partie de la solution plus difficile.</p>
+
+<p>Ci-dessous est une représentation d'un jeu avec une explication
+la façon de lire les indices.</p>
+
+<p><em>Note: dans les descriptions de chaque essai est représenté comme ayant 4 positions.
+Les positions sont numérotées de 1 à 4 présentés de gauche à droite.</em></p>
+
+<table border="1">
+<tr><th>Tentative Représentation</th><th>Explication</th></tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.1.png" height="17" width="87" alt="Entrée: Jaune, Jaune, Rouge, Rouge Clues: Diamond, Triangle et deux Xs grisé"/></td>
+<td>
+<p>Le joueur entre deux jaunes et 2 rouges. Les indices du rapport d'un diamant, un triangle et deux X grisé.
+De cela, il est connu que l'une des conditions suivantes est remplie:</p>
+<ul>
+<li>Il ya au moins deux jaunes</li>
+<li>Il ya au moins deux rouges</li>
+<li>Il est l'un jaune et un rouge</li>
+</ul>
+<p>Le joueur sait aussi que l'une des couleurs est dans la bonne position et on n'est pas.
+Donc, s'il ya deux rouges, on est en position 3 ou 4 et l'autre serait en position 1 ou 2.
+Le même raisonnement peut être appliqué s'il ya deux jaunes ou d'un jaune et un rouge.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.2.png" height="17" width="87" alt="Entrée: Jaune, Rouge, Bleu, Blue Clues: Triangle et trois Xs grisé"/></td>
+<td>
+<p>Le joueur prend un pense qu'il ya un jaune et un rouge,
+entrer dans un jaune et un rouge avec l'introduction d'une nouvelle couleur, bleue.</p>
+<p>Les indices rapport un triangle et 3 X grisé.
+Le joueur sait maintenant qu'il doit y avoir au moins deux jaunes ou deux rouges
+et qu'il n'ya pas de blues.</p>
+<p>Cela doit être vrai puisque le premier essai
+ont rapporté deux couleurs correctes (une dans la mauvaise position) et ceux
+les couleurs sont jaune et rouge. Puisque, dans cet essai le joueur comprend un
+jaune et un rouge, au moins l'un d'eux devait être présent.
+Maintenant, le joueur a besoin de voir si il ya au moins deux jaunes ou deux rouges, le long
+de trouver toutes les autres couleurs qui peuvent être dans la séquence.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.3.png" height="17" width="87" alt="Entrée: jaune, vert, jaune, vert Clues: Trois triangles et un grisé X"/></td>
+<td>
+<p>Le joueur devine jaune comme la couleur qui a eu raison de la première tentative.
+Depuis le premier essai a signalé que d'une couleur a été dans la position correcte et
+une incorrecte, le joueur garde un jaune en position 1 et place le
+d'autres en position 3. Le joueur comprend une nouvelle couleur, vert, en positions 2 et 4.</p>
+<p>Les indices rapport en trois triangles et un grisé X.
+Cela signifie que le joueur a trouvé trois bonnes couleurs, toutes des positions incorrectes.</p>
+<p>Le joueur sait maintenant qu'il ya au moins deux jaunes et un vert.
+Ceci est garanti puisque les deux premiers trys prouvé qu'il y avait au moins deux jaunes ou deux rouges.
+S'il y avait deux rouges, puis d'essayer à trois ne pouvait rapport trois couleurs correct (il
+serait pas de jaune et au plus les deux verts). Maintenant, la tâche est de trouver la
+position correcte des couleurs connues (deux jaunes et un vert) et de trouver
+la quatrième position de la couleur.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.4.png" height="17" width="87" alt="Entrée: blanc, jaune, vert, jaune"/></td>
+<td>
+<p>Du trys précédente le joueur sait où les jaunes ont à faire.
+Seules les positions 2 et 4 sont des options, car il ya au moins deux jaunes
+et ils ne sont pas en positions 1 et 3. Le vert n'est pas en position 2 ou 4
+il est donc soit en position 1 ou 3.</p>
+<p>En tant que suppose le joueur place le vert en position 3.
+La recherche de la quatrième position / couleur le joueur tente un blanc en position 1.</p>
+<p><em>Cela s'avère être le bon ordre.</em></p>
+</td>
+</tr>
+</table>
+<img src="../SequenceSampleGame-HardMode.5.png" alt="Félicitations! Vous avez gagné!"/>
+
+<hr>
+<a href="instructions.html#samples">Retour aux instructions</a>
+<hr>
+
+</body>
+
+</html>
