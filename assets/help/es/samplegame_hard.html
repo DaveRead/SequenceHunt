@@ -1,0 +1,99 @@
+<html>
+
+<body bgcolor="#ccffcc">
+<hr>
+<a href="instructions.html#samples">Volver a Instrucciones</a>
+<hr>
+
+<h1>Secuencia de Hunt - Ejemplo de juego</h1>
+<h2>Dificultad: Difícil</h2>
+
+<p>Con la dificultad de establecer duro, los indicios no indican la
+color asociado con la forma. Esto hace que la determinación
+si los colores que forman parte de la solución más difícil.</p>
+
+<p>A continuación se muestra una representación de un juego junto con una explicación
+de cómo leer las pistas.</p>
+
+<p><em>Nota: en las descripciones de cada intento se 
+representa como que tiene 4 posiciones. Las posiciones 
+están numerados del 1 al 4 que aparece de izquierda a derecha.</em></p>
+
+<table border="1">
+<tr><th>Intento de Representación</th><th>Explicación</th></tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.1.png" height="17" width="87" alt="Entró: Amarillo, Amarillo, Rojo, Rojo pistas: Diamante, triángulo y dos X en gris"/></td>
+<td>
+<p>El jugador entra en dos amarillos y rojos 2. Las pistas informe de un diamante, triángulo y dos X en gris.
+A partir de este se sabe que uno de los siguientes: </p>
+<ul>
+<li>Hay por lo menos dos amarillos</li>
+<li>Hay por lo menos dos rojos </li>
+<li>Hay uno amarillo y uno rojo</li>
+</ul>
+<p>El jugador también sabe que uno de los colores está en la 
+posición correcta y el otro no.
+Por lo tanto, si hay dos rojos, uno está en la 
+posición 3 o 4 y la otra sería en la posición 1 o 2.
+Un razonamiento similar se puede aplicar si hay 
+dos amarillas o una roja y una amarilla.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.2.png" height="17" width="87" alt="Entró: Amarillo, Rojo, Azul, Azul pistas: Triángulo y tres X en gris"/></td>
+<td>
+<p>El jugador toma una conjetura que no hay uno 
+amarillo y uno rojo, uno amarillo y entrar en 
+rojo junto con la introducción de un nuevo color, azul.
+</p><p>
+Las pistas informe de un triángulo y 3 X gris. El jugador 
+ya sabe que debe haber al menos dos amarillos o rojos 
+dos y que no hay azul.</p>  
+<p>Esto tiene que ser verdad desde el primer intento
+informó de dos colores correctos (uno en la posición correcta) y los
+colores eran amarillo y rojo. Dado que en este intento el 
+jugador incluye un
+amarilla y una roja, al menos uno de ellos tenía que estar presente.
+Ahora el jugador tiene que averiguar si hay al menos 
+dos amarillos o rojos dos, a lo largo de
+con la búsqueda de cualquier otro color que pueden estar 
+en la secuencia.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.3.png" height="17" width="87" alt="Entró: amarillo, verde, amarillo, verde pistas: tres triángulos y un gris X"/></td>
+<td>
+<p>El jugador que adivina amarillo como el color que era correcta en el primer intento.
+Desde el primer intento informó de que un color se encontraba en la posición correcta y
+una incorrecta, el jugador mantiene un color amarillo en la posición 1 y coloca el
+otros en la posición 3. El reproductor incluye un nuevo color, verde, en las posiciones 2 y 4.</p>
+<p>Las pistas informe de tres triángulos y un gris X.
+Esto significa que el jugador ha encontrado tres colores correctos, todos ellos en posiciones incorrectas.</p>  
+<p>El jugador ya sabe que hay por lo menos dos amarillos y uno verde.
+Esto está garantizado ya que los dos primeros intentos probado que hubo por lo menos dos amarillos o rojos dos.
+Si había dos rojos intente tres no podía informe de tres colores correctos (no
+no sería amarilla y la mayoría en las dos verdes). Ahora la tarea consiste en averiguar el
+posiciones correctas de los colores conocidos (dos amarillos y uno verde) y encontrar
+la cuarta posición del color.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.4.png" height="17" width="87" alt="Entró: Blanco, Amarillo, Verde, Amarillo"/></td>
+<td>
+<p>De los intentos anteriores el jugador sabe donde los amarillos tienen que ir.
+Sólo las posiciones 2 y 4 son las opciones, ya que hay al menos dos amarillos
+y no están en las posiciones 1 y 3. El verde no está en la posición 2 o 4
+por lo que es, ya sea en la posición 1 o 3.</p>
+<p>Como supongo que el jugador coloca el verde en la posición 3.
+En busca de la cuarta posición / color que el jugador trata 
+de un blanco en la posición 1.
+</p><p>
+<em>Esta resulta ser la secuencia correcta.</em></p>
+</td>
+</tr>
+</table>
+<img src="../SequenceSampleGame-HardMode.5.png" alt="¡Enhorabuena! ¡Has ganado!"/>
+
+<hr>
+<a href="instructions.html#samples">Volver a Instrucciones</a>
+<hr>
+
+</body>
+
+</html>

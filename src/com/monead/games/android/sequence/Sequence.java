@@ -2,11 +2,13 @@ package com.monead.games.android.sequence;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Locale;
 
 import com.monead.games.android.sequence.R;
 import com.monead.games.android.sequence.model.SequenceHuntGameModel;
 import com.monead.games.android.sequence.reporting.GameStatistics;
 import com.monead.games.android.sequence.ui.SequenceGameBoard;
+import com.monead.games.android.sequence.util.KeyCodeConverter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Html;
@@ -305,18 +308,56 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Presents the help screen to the user.
 	 * 
 	 * TODO Internationalize the instructions
+	 * Locale.getDefault().getLanguage()
 	 * 
 	 * This screen contains instructions for game play and operation.
 	 */
 	private void showHelpScreen() {
+		String fileUrl;
+		
 		setContentView(R.layout.help);
 		gameBoardIsDisplayed = false;
 
+		fileUrl = "file:///android_asset/help/";
+		fileUrl += Locale.getDefault().getLanguage();
+		fileUrl += "/instructions.html";
+		
+		// Test for existence of the internationalized file
+//		if (!getFileStreamPath("android_asset/" + Locale.getDefault().getLanguage() + "/help/instructions.html").exists()) {
+		if (!hasFiles("help/" + Locale.getDefault().getLanguage())) {
+			//If it doesn't exist, use default file
+			fileUrl = "file:///android_asset/help/instructions.html";
+		}
+		
 		WebView instructions = (WebView) findViewById(R.id.instructions);
-		instructions.loadUrl("file:///android_asset/help/instructions.html");
+		instructions.loadUrl(fileUrl);
 
 		((Button) findViewById(R.id.button_close))
 				.setOnClickListener(helpDoneClick);
+	}
+	
+	/**
+	 * Check if a directory in the assets tree exists
+	 * Test for existance is whether any files are found.
+	 * So, this method will return false for empty directories.
+	 * 
+	 * @param directoryName The directory to look for
+	 * 
+	 * @return True if the directory exists and contains files
+	 */
+	private boolean hasFiles(String directoryName) {
+		String files[];
+
+		AssetManager am = getAssets();
+		try {
+			files = am.list(directoryName);
+		}
+		catch (Throwable throwable) {
+			Log.w(className, "Cannot get asset file list for: " + directoryName, throwable);
+			files = new String[0];
+		}
+		
+		return files.length > 0;
 	}
 
 	/**
@@ -656,7 +697,8 @@ public class Sequence extends Activity implements OnTouchListener {
 										R.string.label_version)
 								+ ": "
 								+ programVersion
-								+ "\n\nDavid Read\nDavid.Read@monead.com\nwww.monead.com\n\nThe source code is located at: https://github.com/DaveRead/SequenceHunt\n\nThis program is free software released under the GNU Affero General Public License.  See the License menu option for the full license.")
+								+ "\n\n"
+								+ getResources().getString(R.string.message_about))
 						.setCancelable(true)
 						.setNegativeButton(
 								getResources().getString(R.string.button_close),
@@ -787,33 +829,24 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-			case KeyEvent.KEYCODE_ENTER:
-				gameBoard.notifyTry();
-				break;
-			case KeyEvent.KEYCODE_DEL:
-				gameBoard.notifyDeleteChoice();
-				break;
-			case KeyEvent.KEYCODE_Y:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_YELLOW);
-				break;
-			case KeyEvent.KEYCODE_R:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_RED);
-				break;
-			case KeyEvent.KEYCODE_B:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLUE);
-				break;
-			case KeyEvent.KEYCODE_G:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_GREEN);
-				break;
-			case KeyEvent.KEYCODE_K:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLACK);
-				break;
-			case KeyEvent.KEYCODE_W:
-				gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_WHITE);
-				break;
-			default:
-				return super.onKeyDown(keyCode, event);
+		if (keyCode == KeyEvent.KEYCODE_ENTER) {
+			gameBoard.notifyTry();			
+		} else if (keyCode == KeyEvent.KEYCODE_DEL) {
+			gameBoard.notifyDeleteChoice();
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_black).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLACK);
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_blue).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLUE);
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_green).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_GREEN);
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_red).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_RED);
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_white).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_WHITE);
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_yellow).charAt(0))) {
+			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_YELLOW);
+		} else {
+			return super.onKeyDown(keyCode, event);			
 		}
 
 		if (gameBoard.getModel().isWinner()) {
