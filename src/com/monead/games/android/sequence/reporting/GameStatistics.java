@@ -1,12 +1,8 @@
 package com.monead.games.android.sequence.reporting;
 
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.monead.games.android.sequence.model.SequenceHuntGameModel;
 

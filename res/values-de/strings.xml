@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- de -->
 <resources>
     <string name="title_app_name">Sequence Hunt</string>
     <string name="title_welcome">Willkommen in Sequence Hunt!</string>
@@ -6,7 +7,9 @@
     <string name="title_history">Geschichte</string>
     <string name="title_license">Lizenz</string>
     <string name="title_setup">Schwierigkeitsgrad</string>
-    <string name="message_welcome">Vielen Dank für die Sequence Hunt. Wenn Sie irgendwelche Probleme mit seinen Betrieb oder Vorschläge für Verbesserungen, zögern Sie nicht mich zu kontaktieren (David Read, David.Read@monead.com) gefallen. Kontakt Informationen auch finden, mit dem "Info"-Menü.\n\nHinweise können jederzeit, indem Sie das Spiel-Menü und wählen Sie betrachten die "Spielregeln"-Option.\n\nMöchten Sie die Wiedergabe beginnen oder lesen Sie die Anweisungen?\n\n</string> 
+    <string name="message_welcome_initial">\nVielen Dank für die Sequence Hunt.\n</string>
+    <string name="message_welcome_what_is_new">Neu in dieser Version ist die Möglichkeit, die Länge der Sequenz gesetzt. Sie können Längen von 4 bis 8 zu wählen, so dass das Spiel schwieriger als die Sequenzen länger.\n</string>
+    <string name="message_welcome_ending">Wenn Sie irgendwelche Probleme mit dem Spiel den Betrieb oder Vorschläge für Verbesserungen zögern Sie bitte nicht mich zu kontaktieren (David Read, David.Read@monead.com) gefallen. Kontakt Informationen auch finden, mit dem "Info"-Menü.\n\nHinweise können jederzeit, indem Sie das Spiel-Menü und wählen Sie betrachten die "Spielregeln"-Option.\n\nMöchten Sie die Wiedergabe beginnen oder lesen Sie die Anweisungen?\n\n</string> 
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nDer Source-Code befindet sich unter: https://github.com/DaveRead/SequenceHunt\n\nDieses Programm ist freie Software unter der GNU Affero General Public License veröffentlicht. Sehen Sie sich die Lizenz-Menü-Option für die Voll-Lizenz.</string> 
     <string name="message_undefined">undefiniert</string>
     <string name="message_win">Herzlichen Glückwunsch! Sie haben gewonnen!</string>
@@ -48,6 +51,7 @@
     <string name="label_version">Version</string>
     <string name="label_color_statistics">Farbwahl Statistiken\n\n(Prüfung unserer Zufälligkeit)</string>
     <string name="label_runtime_information">Runtime Information</string>
+    <string name="label_sequence_length">Sequenzlänge</string>
     <string name="message_report_program_and_version_names">Abgerufen Programm und die Version Namen</string>
     <string name="errormessage_program_or_version_name">Programm kann nicht Name oder Name Version abrufen</string>
     <string name="errormessage_model_read_failed">Konnte Modell laden</string>

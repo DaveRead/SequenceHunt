@@ -13,15 +13,12 @@ import com.monead.games.android.sequence.util.KeyCodeConverter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.text.ClipboardManager;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -32,11 +29,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Copyright 2011, David S. Read
@@ -61,8 +58,8 @@ import android.widget.Toast;
 /**
  * This is the activity class for the SequenceHunt game.
  * 
- * TODO Move all text to values TODO Allow user to change number of positions in
- * a sequence TODO add time limit feature
+ * TODO Move all text to values 
+ * TODO add time limit feature
  * 
  * @author David Read
  * 
@@ -87,6 +84,11 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Key for persisting the difficulty level choice
 	 */
 	private static final String PREF_MODE_HARD = "ModeHard";
+
+	/**
+	 * Key for persisting the sequence length choice
+	 */
+	private static final String PREF_SEQUENCE_LENGTH = "SequenceLength";
 
 	/**
 	 * Key for persisting whether a current game state has been written to a
@@ -153,12 +155,15 @@ public class Sequence extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 
 		loadGameStatistics();
-		gameBoard = new SequenceGameBoard(this, gameStatistics);
+		gameBoard = new SequenceGameBoard(this, gameStatistics, 
+				getSharedPreferences(PREFERENCES_FILE_NAME, 0)
+				.getInt(PREF_SEQUENCE_LENGTH, SequenceHuntGameModel.DEFAULT_SEQUENCE_LENGTH));
 		loadModel();
 		setup();
 		gameBoard.setOnTouchListener(this);
 
 		if (firstUse()) {
+			Log.d(className, "Need to display first use screen");
 			setupForFirstUse();
 		} else {
 			setContentView(gameBoard);
@@ -170,7 +175,10 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Display the first use screen
 	 */
 	private void setupForFirstUse() {
+		Log.d(className, "Displaying first use screen");
 		setContentView(R.layout.first_use);
+		Log.d(className, "First use screen set as view");
+		
 		gameBoardIsDisplayed = false;
 
 		((Button) findViewById(R.id.button_read_instructions))
@@ -246,14 +254,26 @@ public class Sequence extends Activity implements OnTouchListener {
 	 *            Game play will be harder if true
 	 */
 	private void setDifficultyToHard(boolean difficultyHard) {
-		gameBoard.setDifficultyToHard(difficultyHard);
-
 		SharedPreferences settings = getSharedPreferences(
 				PREFERENCES_FILE_NAME, MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(PREF_MODE_HARD, difficultyHard);
 		editor.commit();
+
+		gameBoard.setDifficultyToHard(difficultyHard);
 	}
+
+	private void setSequenceLength(int sequenceLength) {
+		SharedPreferences settings = getSharedPreferences(
+				PREFERENCES_FILE_NAME, MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(PREF_SEQUENCE_LENGTH, sequenceLength);
+		editor.commit();
+
+		gameBoard.setSequenceLength(sequenceLength);
+	}
+	
+	
 
 	/**
 	 * Life cycle method - called when activity loses focus
@@ -287,6 +307,8 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * This screen allows the user to set preferences related to game play.
 	 */
 	private void showSetupScreen() {
+		int selectedLengthPosition;
+
 		setContentView(R.layout.setup);
 		gameBoardIsDisplayed = false;
 
@@ -296,52 +318,71 @@ public class Sequence extends Activity implements OnTouchListener {
 				.setOnClickListener(setupSaveClick);
 		((Button) findViewById(R.id.button_cancel))
 				.setOnClickListener(setupCancelClick);
+		Spinner spinnerSequenceLength = (Spinner) findViewById(R.id.spinner_sequence_length);
+
+		ArrayAdapter<CharSequence> adapterSequenceLengthOptions = new ArrayAdapter<CharSequence>(
+				this, android.R.layout.simple_spinner_item);
+		adapterSequenceLengthOptions
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerSequenceLength.setAdapter(adapterSequenceLengthOptions);
+
+		selectedLengthPosition = 0;
+		for (int position = 0, length = SequenceHuntGameModel.MINIMUM_SEQUENCE_LENGTH; length <= SequenceHuntGameModel.MAXIMUM_SEQUENCE_LENGTH; ++length, position++) {
+			adapterSequenceLengthOptions.add(length + "");
+			if (gameBoard.getSequenceLength() == length) {
+				selectedLengthPosition = position;
+			}
+		}
 
 		if (gameBoard.isDifficultySetToHard()) {
 			hard.setChecked(true);
 		} else {
 			easy.setChecked(true);
 		}
+
+		spinnerSequenceLength.setSelection(selectedLengthPosition);
 	}
 
 	/**
 	 * Presents the help screen to the user.
 	 * 
-	 * TODO Internationalize the instructions
-	 * Locale.getDefault().getLanguage()
+	 * TODO Internationalize the instructions Locale.getDefault().getLanguage()
 	 * 
 	 * This screen contains instructions for game play and operation.
 	 */
 	private void showHelpScreen() {
 		String fileUrl;
-		
+
 		setContentView(R.layout.help);
 		gameBoardIsDisplayed = false;
 
 		fileUrl = "file:///android_asset/help/";
 		fileUrl += Locale.getDefault().getLanguage();
 		fileUrl += "/instructions.html";
-		
+
 		// Test for existence of the internationalized file
-//		if (!getFileStreamPath("android_asset/" + Locale.getDefault().getLanguage() + "/help/instructions.html").exists()) {
+		// if (!getFileStreamPath("android_asset/" +
+		// Locale.getDefault().getLanguage() +
+		// "/help/instructions.html").exists()) {
 		if (!hasFiles("help/" + Locale.getDefault().getLanguage())) {
-			//If it doesn't exist, use default file
+			// If it doesn't exist, use default file
 			fileUrl = "file:///android_asset/help/instructions.html";
 		}
-		
+
 		WebView instructions = (WebView) findViewById(R.id.instructions);
 		instructions.loadUrl(fileUrl);
 
 		((Button) findViewById(R.id.button_close))
 				.setOnClickListener(helpDoneClick);
 	}
-	
+
 	/**
-	 * Check if a directory in the assets tree exists
-	 * Test for existance is whether any files are found.
-	 * So, this method will return false for empty directories.
+	 * Check if a directory in the assets tree exists Test for existance is
+	 * whether any files are found. So, this method will return false for empty
+	 * directories.
 	 * 
-	 * @param directoryName The directory to look for
+	 * @param directoryName
+	 *            The directory to look for
 	 * 
 	 * @return True if the directory exists and contains files
 	 */
@@ -353,10 +394,12 @@ public class Sequence extends Activity implements OnTouchListener {
 			files = am.list(directoryName);
 		}
 		catch (Throwable throwable) {
-			Log.w(className, "Cannot get asset file list for: " + directoryName, throwable);
+			Log.w(className,
+					"Cannot get asset file list for: " + directoryName,
+					throwable);
 			files = new String[0];
 		}
-		
+
 		return files.length > 0;
 	}
 
@@ -617,7 +660,9 @@ public class Sequence extends Activity implements OnTouchListener {
 		((Button) findViewById(R.id.button_clipboard))
 				.setOnClickListener(historyClipboardClick);
 		history.setText(getResources().getString(R.string.label_version) + ": "
-				+ programVersion + "\n" + gameStatistics.reportHistoryCSV());
+				+ programVersion + "\n"
+				+ "Android: " + android.os.Build.VERSION.SDK_INT + "\n"
+				+ gameStatistics.reportHistoryCSV());
 	}
 
 	/**
@@ -698,7 +743,8 @@ public class Sequence extends Activity implements OnTouchListener {
 								+ ": "
 								+ programVersion
 								+ "\n\n"
-								+ getResources().getString(R.string.message_about))
+								+ getResources().getString(
+										R.string.message_about))
 						.setCancelable(true)
 						.setNegativeButton(
 								getResources().getString(R.string.button_close),
@@ -749,6 +795,25 @@ public class Sequence extends Activity implements OnTouchListener {
 		return dialog;
 	}
 
+	/**
+	 * For dialogs whose values are not static, handle the imminent presentation
+	 * of the dialog
+	 * 
+	 * This call is included to backward compatibility.  The
+	 * method is deprecated, but for pre-API Level 8 
+	 * (e.g. pre Android 2.1) installs it is this method 
+	 * that will be called.
+	 * 
+	 * The method simply calls the replacement version, passing
+	 * null for the new "Bundle" parameter.
+	 */
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		if (android.os.Build.VERSION.SDK_INT < 8) {
+			onPrepareDialog(id, dialog, null);
+		}
+	}
+	
 	/**
 	 * For dialogs whose values are not static, handle the imminent presentation
 	 * of the dialog
@@ -830,23 +895,29 @@ public class Sequence extends Activity implements OnTouchListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_ENTER) {
-			gameBoard.notifyTry();			
+			gameBoard.notifyTry();
 		} else if (keyCode == KeyEvent.KEYCODE_DEL) {
 			gameBoard.notifyDeleteChoice();
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_black).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_black).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLACK);
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_blue).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_blue).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_BLUE);
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_green).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_green).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_GREEN);
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_red).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_red).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_RED);
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_white).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_white).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_WHITE);
-		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources().getString(R.string.key_yellow).charAt(0))) {
+		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
+				.getString(R.string.key_yellow).charAt(0))) {
 			gameBoard.notifyColorChoice(SequenceHuntGameModel.COLOR_YELLOW);
 		} else {
-			return super.onKeyDown(keyCode, event);			
+			return super.onKeyDown(keyCode, event);
 		}
 
 		if (gameBoard.getModel().isWinner()) {
@@ -877,6 +948,13 @@ public class Sequence extends Activity implements OnTouchListener {
 	private OnClickListener setupSaveClick = new OnClickListener() {
 		public void onClick(View v) {
 			RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
+			Spinner spinnerSequenceLength = (Spinner) findViewById(R.id.spinner_sequence_length);
+			try {
+				setSequenceLength(Integer.parseInt(spinnerSequenceLength.getSelectedItem().toString()));
+			}
+			catch (Throwable throwable) {
+				Log.e(className, "Unable to set new sequence length: " + spinnerSequenceLength.getSelectedItem().toString(), throwable);
+			}
 			setDifficultyToHard(hard.isChecked());
 			setContentView(gameBoard);
 			gameBoardIsDisplayed = true;

@@ -10,25 +10,51 @@
             android:textSize="20sp"
             android:textStyle="bold" 
             android:text="@string/title_welcome" />
-	<TextView android:id="@+id/welcome_message"
-			android:layout_width="fill_parent" 
-          	android:layout_height="wrap_content" 
+            
+    <ScrollView android:layout_marginBottom="50dip"
+    		android:id="@+id/ScrollView01" 
   		  	android:fadeScrollbars="false"
           	android:scrollbars="vertical"
-          	android:text="@string/message_welcome"/>  
+    		android:layout_width="fill_parent"    		
+    		android:layout_height="wrap_content">
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    			android:orientation="vertical"
+    			android:layout_width="fill_parent"
+    			android:layout_height="wrap_content" >
+			<TextView android:id="@+id/welcome_message_initial"
+					android:layout_width="fill_parent" 
+          			android:layout_height="wrap_content" 
+		            android:textColor="#ffffc0"
+        		    android:textSize="14sp"
+            		android:textStyle="italic" 
+          			android:text="@string/message_welcome_initial"/>            	
+			<TextView android:id="@+id/welcome_message_what_is_new"
+					android:layout_width="fill_parent" 
+        		  	android:layout_height="wrap_content" 
+            		android:textColor="#c0ffc0"
+            		android:textSize="16sp"
+          			android:text="@string/message_welcome_what_is_new"/>  
+			<TextView android:id="@+id/welcome_message_ending"
+					android:layout_width="fill_parent" 
+          			android:layout_height="wrap_content" 
+          			android:text="@string/message_welcome_ending"/>
+    	</LinearLayout>  
+	</ScrollView>
 
-  	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    		android:orientation="horizontal"
-    		android:layout_width="fill_parent"
-    		android:layout_height="fill_parent" >
-    	<Button android:id="@+id/button_play"
-         		android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:text="@string/button_play" />
-    	<Button android:id="@+id/button_read_instructions"
-            	android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:text="@string/button_read_instructions" />       
-  	</LinearLayout>
+    <RelativeLayout android:layout_marginTop="-50dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">
+  		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    			android:orientation="horizontal"
+    			android:layout_width="fill_parent"
+    			android:layout_height="fill_parent" >
+    		<Button android:id="@+id/button_play"
+         			android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="@string/button_play" />
+    		<Button android:id="@+id/button_read_instructions"
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="@string/button_read_instructions" />       
+  		</LinearLayout>
+  	</RelativeLayout>
           	
 </LinearLayout>

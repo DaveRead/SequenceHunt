@@ -14,7 +14,6 @@ import com.monead.games.android.sequence.ui.shape.TriangleShape;
 
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,7 +21,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.RectShape;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
 import android.view.View.OnTouchListener;
 
@@ -110,6 +108,14 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	private final static int INDEX_COLOR_CODE = 4;
 	
 	/**
+	 * The number of clues that can be displayed in the
+	 * space occupied by a guess.  Currently this is
+	 * 4, as the clues occupy 1/4 of the guess space,
+	 * arranged in a 2x2 grid
+	 */
+	private final static int CLUES_PER_GUESS_SPACE = 4;
+	
+	/**
 	 * An array depicting the touch-screen input images.
 	 * 
 	 * The first dimension is the color or function.
@@ -136,6 +142,11 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	private boolean difficultyIsHard;
 	
 	/**
+	 * The length of the sequence
+	 */
+	private int sequenceLength;
+	
+	/**
 	 * Information collected as the game board is
 	 * setup and used
 	 */
@@ -151,19 +162,20 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * 
 	 * @param context The context to update
 	 */
-	public SequenceGameBoard(Context context, GameStatistics gameStatistics) {
+	public SequenceGameBoard(Context context, GameStatistics gameStatistics, int sequenceLength) {
 		super(context);
 
 		//gameModel = new SequenceHuntGameModel();
 		this.gameStatistics = gameStatistics;
-		newGame();
+		setSequenceLength(sequenceLength);
+//		newGame();
 	}
 
 	/**
 	 * Start a new game, losing any prior game model
 	 */
 	public void newGame() {
-		gameModel = new SequenceHuntGameModel();
+		gameModel = new SequenceHuntGameModel(sequenceLength);
 		gameStatistics.addGame(gameModel);
 		invalidate();
 	}
@@ -205,6 +217,28 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	}
 	
 	/**
+	 * Set the sequence length.  If there is no current game
+	 * or if this is an updated length, a new game is started.
+	 * 
+	 * @param sequenceLength The length of the sequence
+	 */
+	public void setSequenceLength(int sequenceLength) {
+		if (getModel() == null || getModel().getSequenceLength() != sequenceLength) {
+			this.sequenceLength = sequenceLength;
+			newGame();
+		}
+	}
+	
+	/**
+	 * Get the length of the sequence
+	 * 
+	 * @return The length of the sequence
+	 */
+	public int getSequenceLength() {
+		return sequenceLength;
+	}
+	
+	/**
 	 * Get an array of string reporting runtime information
 	 * for the game board.  This is mostly environment and
 	 * calculation information used to layout the screen
@@ -240,11 +274,12 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	private void configView(Canvas canvas) {
 		int canvasWidth = canvas.getWidth();
 		int canvasHeight = canvas.getHeight();
-
+		int numberOfClueSpacesNeeded = (gameModel.getSequenceLength() + (CLUES_PER_GUESS_SPACE - 1)) / CLUES_PER_GUESS_SPACE;
+		
 		int viewWidth = getWidth();
 		int viewHeight = getHeight();
 
-		int availWidth = getWidth() / (gameModel.getSequenceLength() + 1);
+		int availWidth = getWidth() / (gameModel.getSequenceLength()  + numberOfClueSpacesNeeded);
 		int availHeight = getHeight() / (gameModel.getMaxTrys() + 2);
 
 		int horizSpacing = availWidth / 5;
@@ -267,7 +302,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 		
 		int circleArea = Math.min(availWidth, availHeight);
 
-		int xPadding = (getWidth() - ((circleArea + horizSpacing) * (gameModel.getSequenceLength() + 1))) / 2;
+		int xPadding = (getWidth() - ((circleArea + horizSpacing) * (gameModel.getSequenceLength() + numberOfClueSpacesNeeded))) / 2;
 
 		runtimeInformation.put("cv circleArea", "" + circleArea);
 		runtimeInformation.put("cv xPadding initial", "" + xPadding);
@@ -285,7 +320,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 
 		for (int row = 0; row < gameModel.getMaxTrys(); ++row) {
 			drawRow(canvas, row, xPadding, circleArea, horizSpacing,
-					vertSpacing);
+					vertSpacing, numberOfClueSpacesNeeded);
 		}
 
 		configInput(canvas, circleArea,
@@ -301,16 +336,17 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * @param circleArea The area for one guess circle
 	 * @param horizSpacing The amount of horizontal padding between shapes
 	 * @param vertSpacing The amount of vertical padding between shapes
+	 * @param numberOfClueSpacesNeeded The number of guess spaces occupied by the clues
 	 */
 	private void drawRow(Canvas canvas, int row, int xPadding, int circleArea,
-			int horizSpacing, int vertSpacing) {
+			int horizSpacing, int vertSpacing, int numberOfClueSpacesNeeded) {
 		for (int clue = 0; row < gameModel.getCurrentTry() && clue < gameModel.getSequenceLength(); ++clue) {
-			configClue(canvas, row, xPadding, clue, circleArea, vertSpacing);
+			configClue(canvas, row, xPadding, clue, circleArea, vertSpacing, numberOfClueSpacesNeeded);
 		}
 
 		for (int tryNum = 0; tryNum < gameModel.getSequenceLength(); ++tryNum) {
 			configTry(canvas, row, xPadding, tryNum, circleArea, horizSpacing,
-					vertSpacing);
+					vertSpacing, numberOfClueSpacesNeeded);
 		}
 	}
 
@@ -325,9 +361,10 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * @param clueNum The clue number being drawn
 	 * @param availArea The available area for the clue
 	 * @param vertSpacing The amount of vertical padding between clues
+	 * @param numberOfClueSpacesNeeded The number of guess spaces occupied by the clues
 	 */
 	private void configClue(Canvas canvas, int row, int xPadding, int clueNum,
-			int availArea, int vertSpacing) {
+			int availArea, int vertSpacing, int numberOfClueSpacesNeeded) {
 		ShapeDrawable mDrawable;
 		boolean hasBorder;
 
@@ -335,15 +372,15 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 
 		runtimeInformation.put("cc circleArea", "" + circleArea);
 		
-		int x = circleArea * (clueNum % 2);
+		int x = circleArea * (clueNum % ((gameModel.getSequenceLength() + 1) / 2));
 		if (x > 0) {
-			x++;
+			x = x + (clueNum % ((gameModel.getSequenceLength() + 1) / 2));
 		}
 		x += xPadding;
 
 		int y = (availArea + vertSpacing) * row;
 		y += availArea;
-		if (clueNum > 1) {
+		if (clueNum > ((gameModel.getSequenceLength() - 1) / 2)) {
 			y += circleArea + 1;
 		}
 
@@ -398,12 +435,13 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * @param availArea The area available to draw a guess shape
 	 * @param horizSpacing The amount of horizontal padding between clues
 	 * @param vertSpacing The amount of vertical padding between clues
+	 * @param numberOfClueSpacesNeeded The number of guess spaces occupied by the clues
 	 */
 	private void configTry(Canvas canvas, int row, int xPadding, int tryNum,
-			int availArea, int horizSpacing, int vertSpacing) {
+			int availArea, int horizSpacing, int vertSpacing, int numberOfClueSpacesNeeded) {
 		ShapeDrawable mDrawable;
 
-		int x = xPadding + (availArea + horizSpacing) * (tryNum + 1);
+		int x = xPadding + (availArea + horizSpacing) * (tryNum + numberOfClueSpacesNeeded);
 
 		int y = availArea * (row + 1);
 		y += vertSpacing * (row - 1);

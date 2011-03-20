@@ -1,7 +1,5 @@
 package com.monead.games.android.sequence.event;
 
-import android.graphics.Color;
-
 /**
  * Copyright 2011, David S. Read
  * 

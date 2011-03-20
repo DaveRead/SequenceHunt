@@ -38,7 +38,7 @@ import android.util.Log;
  * 
  */
 public class SequenceHuntGameModel implements Serializable {
-	private static final long serialVersionUID = 5685518061216785730L;
+	private static final long serialVersionUID = 5685518061216785731L;
 
 	/**
 	 * Maximum number of attempts to discover the sequence
@@ -46,9 +46,19 @@ public class SequenceHuntGameModel implements Serializable {
 	private static int MAX_TRYS_ALLOWED = 10;
 	
 	/**
-	 * Fixed size of the sequence
+	 * Default size of the sequence
 	 */
-	private static int SEQUENCE_LENGTH = 4;
+	public static int DEFAULT_SEQUENCE_LENGTH = 4;
+	
+	/**
+	 * Minimum size of the sequence
+	 */
+	public static int MINIMUM_SEQUENCE_LENGTH = 4;
+	
+	/**
+	 * Maximum size of the sequence
+	 */
+	public static int MAXIMUM_SEQUENCE_LENGTH = 8;
 	
 	/**
 	 * Value of an unselected position
@@ -126,6 +136,11 @@ public class SequenceHuntGameModel implements Serializable {
 	private int[][] guess;
 
 	/**
+	 * Length of the sequence
+	 */
+	private int sequenceLength;
+	
+	/**
 	 * Stores the computed clues for the trys
 	 * 
 	 * Three dimensional array containing the the clues for each try. Clues
@@ -174,14 +189,26 @@ public class SequenceHuntGameModel implements Serializable {
 	private Random random = new Random();
 
 	/**
+	 * Class name used for logging
+	 */
+	private String className = this.getClass().getName();
+
+	/**
 	 * Setup the model with a generated answer that the user must find
 	 */
-	public SequenceHuntGameModel() {
-		guess = new int[MAX_TRYS_ALLOWED][SEQUENCE_LENGTH];
-		clue = new int[MAX_TRYS_ALLOWED][SEQUENCE_LENGTH][NUM_CLUE_METADATA];
-		answer = new int[SEQUENCE_LENGTH];
+	public SequenceHuntGameModel(int sequenceLength) {
+		Log.d(className, "Requested sequence length: " + sequenceLength);
+		setSequenceLength(sequenceLength);
+		Log.d(className, "Resulting sequence length: " + getSequenceLength());
+		setup();
+	}
+	
+	private void setup() {
+		guess = new int[MAX_TRYS_ALLOWED][getSequenceLength()];
+		clue = new int[MAX_TRYS_ALLOWED][getSequenceLength()][NUM_CLUE_METADATA];
+		answer = new int[getSequenceLength()];
 
-		for (int cell = 0; cell < SEQUENCE_LENGTH; ++cell) {
+		for (int cell = 0; cell < getSequenceLength(); ++cell) {
 			switch (Math.abs(random.nextInt() % NUM_COLORS)) {
 				case 0:
 					answer[cell] = COLOR_BLACK;
@@ -209,9 +236,30 @@ public class SequenceHuntGameModel implements Serializable {
 		}
 
 		currentTry = 0;
-		currentPosit = 0;
+		currentPosit = 0;		
 	}
 
+	/**
+	 * Sets the sequence length for the model
+	 * 
+	 * If the length supplied is less than the minimum allowed or
+	 * greater than the maximum allowed, it will be set to the
+	 * default length.
+	 * 
+	 * @param sequenceLength The length of the sequence, which must be
+	 * 	between the constant values of MIMUMUM_SEQUENCE_LENGTH and 
+	 *   MAXIMUM_SEQUENCE_LENGTH
+	 */
+	private void setSequenceLength(int sequenceLength) {
+		if (sequenceLength >= MINIMUM_SEQUENCE_LENGTH && sequenceLength <= MAXIMUM_SEQUENCE_LENGTH) {
+			this.sequenceLength = sequenceLength;
+			Log.d(className, "setSequenceLength, used supplied value: " + sequenceLength);
+		} else {
+			this.sequenceLength = DEFAULT_SEQUENCE_LENGTH;
+			Log.d(className, "setSequenceLength, ignored supplied value: " + sequenceLength + " and used default: " + this.sequenceLength);
+		}
+	}
+	
 	/**
 	 * Maintain the counts of each selected color
 	 * 
@@ -296,7 +344,7 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return True if there was a spot left in the current try for a guess
 	 */
 	public boolean addGuess(int color) {
-		if (currentTry < MAX_TRYS_ALLOWED && currentPosit < SEQUENCE_LENGTH) {
+		if (currentTry < MAX_TRYS_ALLOWED && currentPosit < getSequenceLength()) {
 			guess[currentTry][currentPosit] = color;
 			++currentPosit;
 			return true;
@@ -326,7 +374,7 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return True if a full set of guesses was supplied
 	 */
 	public boolean submitGuess() {
-		if (currentTry < MAX_TRYS_ALLOWED && currentPosit == SEQUENCE_LENGTH) {
+		if (currentTry < MAX_TRYS_ALLOWED && currentPosit == getSequenceLength()) {
 			calcClues();
 			++currentTry;
 			currentPosit = 0;
@@ -344,13 +392,13 @@ public class SequenceHuntGameModel implements Serializable {
 		int tempGuess[];
 
 		clueNum = 0;
-		tempGuess = new int[SEQUENCE_LENGTH];
+		tempGuess = new int[getSequenceLength()];
 
-		for (int copyGuess = 0; copyGuess < SEQUENCE_LENGTH; ++copyGuess) {
+		for (int copyGuess = 0; copyGuess < getSequenceLength(); ++copyGuess) {
 			tempGuess[copyGuess] = guess[currentTry][copyGuess];
 		}
 
-		for (int check = 0; check < SEQUENCE_LENGTH; ++check) {
+		for (int check = 0; check < getSequenceLength(); ++check) {
 			if (tempGuess[check] == answer[check]) {
 				clue[currentTry][clueNum][CLUE_METADATA_TYPE] = CLUE_POSIT_CORRECT;
 				clue[currentTry][clueNum++][CLUE_METADATA_COLOR] = answer[check];
@@ -359,14 +407,14 @@ public class SequenceHuntGameModel implements Serializable {
 			}
 		}
 
-		if (clueNum == SEQUENCE_LENGTH) {
+		if (clueNum == getSequenceLength()) {
 			setWinner(true);
 		}
 
 		if (!isWinner()) {
-			for (int check = 0; check < SEQUENCE_LENGTH; ++check) {
+			for (int check = 0; check < getSequenceLength(); ++check) {
 				if (guess[currentTry][check] != answer[check]) {
-					for (int findMatch = 0; findMatch < SEQUENCE_LENGTH; ++findMatch) {
+					for (int findMatch = 0; findMatch < getSequenceLength(); ++findMatch) {
 						if (answer[check] == tempGuess[findMatch]) {
 							clue[currentTry][clueNum][CLUE_METADATA_TYPE] = CLUE_POSIT_INCORRECT;
 							clue[currentTry][clueNum++][CLUE_METADATA_COLOR] = answer[check];
@@ -389,9 +437,9 @@ public class SequenceHuntGameModel implements Serializable {
 		
 		answerValue = "";
 		
-		for (int posit = 0;posit < SEQUENCE_LENGTH;++posit) {
+		for (int posit = 0;posit < getSequenceLength();++posit) {
 			if (answerValue.length() > 0) {
-				answerValue += ", ";
+				answerValue += ",";
 			}
 			answerValue += answer[posit];
 		}
@@ -410,7 +458,7 @@ public class SequenceHuntGameModel implements Serializable {
 
 		answerText = "";
 
-		for (int posit = 0; posit < SEQUENCE_LENGTH; ++posit) {
+		for (int posit = 0; posit < getSequenceLength(); ++posit) {
 			switch (answer[posit]) {
 				case COLOR_BLACK:
 					colorName = context.getResources().getString(R.string.color_black);
@@ -449,7 +497,8 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return The length of the sequence
 	 */
 	public int getSequenceLength() {
-		return SEQUENCE_LENGTH;
+		Log.d(className, "getSequenceLength returning: " + sequenceLength);
+		return sequenceLength;
 	}
 
 	/**
