@@ -8,7 +8,7 @@
     <string name="title_license">Lizenz</string>
     <string name="title_setup">Schwierigkeitsgrad</string>
     <string name="message_welcome_initial">\nVielen Dank für die Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Neu in dieser Version ist die Möglichkeit, die Länge der Sequenz gesetzt. Sie können Längen von 4 bis 8 zu wählen, so dass das Spiel schwieriger als die Sequenzen länger.\n</string>
+    <string name="message_welcome_what_is_new">Diese Version bietet Unterstützung für die italienische sowie das Mischen der Spuren, so dass ein Muster nicht zwischen der Reihenfolge der Hinweise und die Lösung gefunden.\n</string>
     <string name="message_welcome_ending">Wenn Sie irgendwelche Probleme mit dem Spiel den Betrieb oder Vorschläge für Verbesserungen zögern Sie bitte nicht mich zu kontaktieren (David Read, David.Read@monead.com) gefallen. Kontakt Informationen auch finden, mit dem "Info"-Menü.\n\nHinweise können jederzeit, indem Sie das Spiel-Menü und wählen Sie betrachten die "Spielregeln"-Option.\n\nMöchten Sie die Wiedergabe beginnen oder lesen Sie die Anweisungen?\n\n</string> 
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nDer Source-Code befindet sich unter: https://github.com/DaveRead/SequenceHunt\n\nDieses Programm ist freie Software unter der GNU Affero General Public License veröffentlicht. Sehen Sie sich die Lizenz-Menü-Option für die Voll-Lizenz.</string> 
     <string name="message_undefined">undefiniert</string>
@@ -40,7 +40,7 @@
     <string name="radiobutton_easy">Einfach</string>
     <string name="radiobutton_hard">Schwierig</string>
     <string name="menu_how_to_play">Wie spielt man</string>
-    <string name="menu_setup">Setup</string>
+    <string name="menu_setup">Konfigurieren</string>
     <string name="menu_new_game">Neues Spiel</string>
     <string name="menu_quit">Beenden</string>
     <string name="menu_about">Über</string>

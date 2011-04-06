@@ -8,7 +8,7 @@
     <string name="title_license">Licence</string>
     <string name="title_setup">Niveau de difficulté</string>
     <string name="message_welcome_initial">\nMerci d\'avoir installé des Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Nouveautés dans cette version est la possibilité de régler la longueur de la séquence. Vous pouvez choisir la longueur de quatre à huit, ce qui rend le jeu plus difficile que les séquences plus longues.\n</string>
+    <string name="message_welcome_what_is_new">Cette version ajoute le support pour l\'italien ainsi que mélanger les indices de sorte qu\'un motif n\'est pas trouvé entre l\'ordre des indices et la solution.\n</string>
     <string name="message_welcome_ending">Si vous avez des problèmes avec le fonctionnement du jeu ou des suggestions pour des améliorations s\'il vous plaît n\'hésitez pas à me contacter (David Read, David.Read@monead.com). Informations de contact a également trouvés en utilisant le «A propos» du menu.\n\nLes instructions peuvent être consultés à tout moment en mettant le menu du jeu et de sélectionner le \'comment jouer\' option.\n\nSouhaitez-vous commencer à jouer ou de lire les instructions?\n\n</string> 
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nLe code source est situé au: https://github.com/DaveRead/SequenceHunt\n\nCe programme est un logiciel libre distribué sous la GNU Affero General Public License. Voir l\'option de menu de licence pour une licence complète.</string> 
     <string name="message_undefined">indéfini</string>

@@ -1,7 +1,11 @@
 package com.monead.games.android.sequence.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -38,7 +42,7 @@ import android.util.Log;
  * 
  */
 public class SequenceHuntGameModel implements Serializable {
-	private static final long serialVersionUID = 5685518061216785731L;
+	private static final long serialVersionUID = 5685518061216785732L;
 
 	/**
 	 * Maximum number of attempts to discover the sequence
@@ -141,6 +145,27 @@ public class SequenceHuntGameModel implements Serializable {
 	private int sequenceLength;
 	
 	/**
+	 * Has the game started - typically starts when the user
+	 * selects the first color
+	 */
+	private boolean gameStarted;
+	
+	/**
+	 * How long has the game been (actively) going on?
+	 * This will not count time when the app is hidden
+	 * or closed.
+	 */
+	private long elapsedMS;
+	
+	/**
+	 * The date value when the elapsedMS value
+	 * was last updated.  Doesn't get persisted
+	 * since time when app is shutdown should
+	 * not count toward playing time.
+	 */
+	transient private Date latestStartupDate;
+	
+	/**
 	 * Stores the computed clues for the trys
 	 * 
 	 * Three dimensional array containing the the clues for each try. Clues
@@ -236,7 +261,9 @@ public class SequenceHuntGameModel implements Serializable {
 		}
 
 		currentTry = 0;
-		currentPosit = 0;		
+		currentPosit = 0;
+		gameStarted = false;
+		elapsedMS = 0;
 	}
 
 	/**
@@ -336,6 +363,55 @@ public class SequenceHuntGameModel implements Serializable {
 	}
 
 	/**
+	 * Signal that a game has started
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 */
+	private void signalGameStart() {
+		gameStarted = true;
+		latestStartupDate = new Date();
+	}
+	
+	/**
+	 * Update the MS elapsed for the current game
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 */
+	public void updateElapsedTime() {
+		Date date;
+
+		if (gameStarted && latestStartupDate != null) {
+			date = new Date();
+			elapsedMS += date.getTime() - latestStartupDate.getTime();
+			latestStartupDate = date;
+		} else {
+			if (gameStarted) {
+				// Probably back from being paused
+				latestStartupDate = new Date();
+			}
+		}
+	}
+	
+	/**
+	 * Signal that a game has ended
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 */
+	public void signalGameEnd() {
+		gameStarted = false;
+	}
+	
+	/**
+	 * Signal that a game is being paused.  Elapsed
+	 * time will not be counted toward the game.
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 */
+	public void signalGamePaused() {
+		updateElapsedTime();
+	}
+	
+	/**
 	 * Add a guess to the current try
 	 * 
 	 * @param color
@@ -344,6 +420,10 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return True if there was a spot left in the current try for a guess
 	 */
 	public boolean addGuess(int color) {
+		if (!gameStarted) {
+			signalGameStart();
+		}
+		
 		if (currentTry < MAX_TRYS_ALLOWED && currentPosit < getSequenceLength()) {
 			guess[currentTry][currentPosit] = color;
 			++currentPosit;
@@ -390,6 +470,7 @@ public class SequenceHuntGameModel implements Serializable {
 	private void calcClues() {
 		int clueNum;
 		int tempGuess[];
+		int numberOfCorrectPositionClues;
 
 		clueNum = 0;
 		tempGuess = new int[getSequenceLength()];
@@ -410,6 +491,8 @@ public class SequenceHuntGameModel implements Serializable {
 		if (clueNum == getSequenceLength()) {
 			setWinner(true);
 		}
+		
+		numberOfCorrectPositionClues = clueNum;
 
 		if (!isWinner()) {
 			for (int check = 0; check < getSequenceLength(); ++check) {
@@ -425,8 +508,59 @@ public class SequenceHuntGameModel implements Serializable {
 				}
 			}
 		}
+		
+		shuffleClues(numberOfCorrectPositionClues, clueNum);
 	}
 
+	/**
+	 * Randomize the order of the clues (keeping
+	 * each clue type [e.g. position correct, position incorrect]
+	 * together).  This is necessary to prevent the player
+	 * from using the order of the "position correct" clues
+	 * to figure out which clue applies to which 
+	 * position.
+	 * 
+	 * e.g. if the sequence is yellow, red, yellow, green
+	 * and the clues are reported back without randomization,
+	 * then a try of yellow, green, red, yellow
+	 * will report yellow and red diamonds (in that order everytime)
+	 * followed by a yellow triangle.  The fact that the
+	 * red diamond follows the yellow diamond would inform the
+	 * player that it was the first yellow that was in the correct
+	 * position (since it is the only yellow before the red guess).
+	 * The randomization prevents the player from finding such 
+	 * a pattern from try to try.
+	 * 
+	 * @param numberOfCorrectPositionClues The number of clues indicating a correct color and position
+	 * @param numClues The total number of clues
+	 */
+	private void shuffleClues(int numberOfCorrectPositionClues, int numClues) {
+		List<Integer> temp;
+				
+		// Shuffle the correct position clues
+		if (numberOfCorrectPositionClues > 1) {
+			temp = new ArrayList<Integer>();
+			for (int index = 0;index < numberOfCorrectPositionClues;++index) {
+				temp.add(clue[currentTry][index][CLUE_METADATA_COLOR]);
+			}
+			Collections.shuffle(temp);
+			for (int index = 0;index < numberOfCorrectPositionClues;++index) {
+				clue[currentTry][index][CLUE_METADATA_COLOR] = temp.get(index);
+			}
+		}
+		
+		// Shuffle the incorrect position clues
+		if (numClues - numberOfCorrectPositionClues > 1) {
+			temp = new ArrayList<Integer>();
+			for (int index = numberOfCorrectPositionClues;index < numClues;++index) {
+				temp.add(clue[currentTry][index][CLUE_METADATA_COLOR]);
+			}
+			Collections.shuffle(temp);
+			for (int index = 0;index < temp.size();++index) {
+				clue[currentTry][index + numberOfCorrectPositionClues][CLUE_METADATA_COLOR] = temp.get(index);
+			}
+		}
+	}
 	/**
 	 * Get the color index values for the correct sequence
 	 * 

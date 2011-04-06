@@ -1,0 +1,89 @@
+<html>
+
+<body bgcolor="#ccffcc">
+<hr>
+<a href="instructions.html#samples">Torna alle istruzioni</a>
+<hr>
+
+<h1>Sequence Hunt - Campione del gioco</h1>
+<h2>Difficoltà: Difficile</h2>
+
+<p>Con la difficoltà impostata difficile, gli indizi non indicherà il
+colore associato con la forma. Questo rende la determinazione
+se i colori che sono parte della soluzione più impegnativa.</p>
+
+<p>Qui di seguito è una rappresentazione di un gioco insieme ad una spiegazione
+di come leggere gli indizi.</p>
+
+<p><em>Nota: nelle descrizioni di ogni prova è rappresentato come avere 4 posizioni.
+Le posizioni sono numerate da 1 a 4, come presentato da sinistra a destra.</em></p>
+
+<table border="1">
+<tr><th>Prova Immagine</th><th>Spiegazione</th></tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.1.png" height="17" width="87" alt="Inserito da: giallo, giallo, rosso, rosso Indizi: diamante, triangolo e due X grigio"/></td>
+<td>
+<p>Il giocatore entra due gialli e 2 rossi. Gli indizi relazione di un diamante, un triangolo e due X grigio.
+Da questo è noto che una delle seguenti condizioni:</p>
+<ul>
+<li>Ci sono almeno due gialli</li>
+<li>Ci sono almeno due rossi</li>
+<li>C'è uno giallo e uno rosso</li>
+</ul>
+<p>Il giocatore sa anche che uno dei colori sia nella posizione corretta e non si è.
+Quindi, se ci sono due rossi, uno è in posizione 3 o 4 e l'altra sarebbe in posizione 1 o 2.
+Un ragionamento analogo può essere applicato se ci sono due gialli o di un giallo e un rosso.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.2.png" height="17" width="87" alt="Inserito da: giallo, rosso, blu, blu Indizi: triangolo e tre X grigio"/></td>
+<td>
+<p>Il giocatore prende una supposizione che non vi è uno giallo e uno rosso,
+entrando in uno giallo e uno rosso con l'introduzione di un nuovo colore, il blu.</p>  
+<p>Gli indizi relazione di un triangolo e 3 Xs grigio.
+Il giocatore ora sa che non ci devono essere almeno due gialli o due rossi
+e che non ci sono blu.</p>  
+<p>Questo deve essere vero, poiché la prima prova
+segnalato due colori corretti (uno in posizione non corretta) e quelli
+colori sono giallo e rosso. Dato che in questa prova il giocatore incluso un
+giallo e un rosso, almeno uno di loro doveva essere presente.
+Ora il giocatore deve capire se ci sono almeno due gialli o due rossi, insieme
+di trovare altri colori che possono essere in sequenza.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.3.png" height="17" width="87" alt="Inserito da: giallo, verde, giallo, verde Indizi: tre triangoli e un grigio X"/></td>
+<td>
+<p>Il giocatore che indovina il giallo come il colore che è stato corretto nel primo tentativo.
+Fin dalla prima prova ha riferito che un colore era in posizione corretta e
+uno non corretto, il giocatore mantiene quello giallo in posizione 1 e pone il
+altri in posizione 3. Il lettore include un nuovo colore, il verde, nelle posizioni 2 e 4.</p>
+<p>Gli indizi relazione tre triangoli e un grigio X.
+Ciò significa che il giocatore ha trovato tre colori corretti, tutti in posizioni non corrette.</p>  
+<p>Il giocatore ora sa che ci sono almeno due gialli e uno verde.
+Questo è garantita poiché le prime due trys dimostrato che ci sono stati almeno due gialli o due rossi.
+Se ci fossero due rossi quindi provare tre non potrebbero riferire tre colori corretta (è
+sarebbe alcun giallo e un massimo di due green). Ora il compito è quello di capire il
+posizioni corrette dei colori conosciuti (due gialli e uno verde) e trova
+quarta posizione a colori.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.4.png" height="17" width="87" alt="Inserito da: bianco, giallo, verde, giallo"/></td>
+<td>
+<p>Dal trys precedente il giocatore sa dove i gialli devono andare.
+Solo posizioni 2 e 4 sono opzioni, dato che ci sono almeno due gialli
+e non sono nelle posizioni 1 e 3. Il verde non è in posizione 2 o 4
+quindi è sia in posizione 1 o 3.</p>
+<p>Come indovinare il giocatore mette il verde in posizione 3.
+Alla ricerca della quarta posizione / colore il giocatore cerca un bianco in posizione 1.
+</p>  
+<p><em>Questa risulta essere la corretta sequenza!</em></p>
+</td>
+</tr>
+</table>
+<img src="../SequenceSampleGame-HardMode.5.png" alt="Congratulazioni! Hai vinto!"/>
+
+<hr>
+<a href="instructions.html#samples">Torna alle istruzioni</a>
+<hr>
+
+</body>
+
+</html>

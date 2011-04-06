@@ -1,7 +1,9 @@
 package com.monead.games.android.sequence.ui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,8 @@ import android.view.View;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
 import android.graphics.drawable.shapes.OvalShape;
@@ -265,6 +269,28 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	protected void onDraw(Canvas canvas) {
 		configView(canvas);
 	}
+	
+	/**
+	 * Display the game timer
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 * 
+	 * @param canvas The canvas being updated
+	 * @param circleArea The height of the area that is available
+	 * 	at the top of the canvas
+	 */
+	private void drawTimer(Canvas canvas, int circleArea) {
+		Paint paint;
+		SimpleDateFormat dateFormat;
+		dateFormat = new SimpleDateFormat("HH:MM:ss");
+		
+		paint = new Paint();
+		paint.setTextAlign(Align.CENTER);
+		paint.setTextSize(12);
+		paint.setColor(Color.WHITE);
+		
+//		canvas.drawText("Test Message" + dateFormat.format(new Date()), canvas.getWidth() / 2, circleArea/2, paint);
+	}
 
 	/**
 	 * Layout the game board on the supplied canvas
@@ -318,6 +344,8 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 		drawable.setBounds(0, 0, getWidth(), 1);
 		drawable.draw(canvas);
 
+//		drawTimer(canvas, circleArea);
+		
 		for (int row = 0; row < gameModel.getMaxTrys(); ++row) {
 			drawRow(canvas, row, xPadding, circleArea, horizSpacing,
 					vertSpacing, numberOfClueSpacesNeeded);
