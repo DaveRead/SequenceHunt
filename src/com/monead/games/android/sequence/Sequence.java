@@ -7,7 +7,9 @@ import java.util.Locale;
 import com.monead.games.android.sequence.R;
 import com.monead.games.android.sequence.model.SequenceHuntGameModel;
 import com.monead.games.android.sequence.reporting.GameStatistics;
+import com.monead.games.android.sequence.reporting.GameStatisticsEngine;
 import com.monead.games.android.sequence.ui.SequenceGameBoard;
+import com.monead.games.android.sequence.util.Formatter;
 import com.monead.games.android.sequence.util.KeyCodeConverter;
 
 import android.app.Activity;
@@ -58,8 +60,7 @@ import android.widget.TextView;
 /**
  * This is the activity class for the SequenceHunt game.
  * 
- * TODO Move all text to values 
- * TODO add time limit feature
+ * TODO Move all text to values TODO add time limit feature
  * 
  * @author David Read
  * 
@@ -123,7 +124,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	/**
 	 * Track statistics about game operation
 	 */
-	private GameStatistics gameStatistics;
+	private GameStatisticsEngine gameStatistics;
 
 	/**
 	 * Track whether the gameboard is in control
@@ -155,9 +156,10 @@ public class Sequence extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 
 		loadGameStatistics();
-		gameBoard = new SequenceGameBoard(this, gameStatistics, 
-				getSharedPreferences(PREFERENCES_FILE_NAME, 0)
-				.getInt(PREF_SEQUENCE_LENGTH, SequenceHuntGameModel.DEFAULT_SEQUENCE_LENGTH));
+		gameBoard = new SequenceGameBoard(this, gameStatistics,
+				getSharedPreferences(PREFERENCES_FILE_NAME, 0).getInt(
+						PREF_SEQUENCE_LENGTH,
+						SequenceHuntGameModel.DEFAULT_SEQUENCE_LENGTH));
 		loadModel();
 		setup();
 		gameBoard.setOnTouchListener(this);
@@ -166,9 +168,27 @@ public class Sequence extends Activity implements OnTouchListener {
 			Log.d(className, "Need to display first use screen");
 			setupForFirstUse();
 		} else {
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
+	}
+
+	/**
+	 * Display the gameboard
+	 */
+	private void displayGameboard() {
+		setContentView(gameBoard);
+		gameBoardIsDisplayed = true;
+		gameBoard.getModel().signalGameRestored();
+	}
+
+	/**
+	 * Flag that the gameboard is not currently displayed
+	 */
+	private void setGameBoardNotVisible() {
+		gameBoard.getModel().signalGamePaused();
+		gameBoardIsDisplayed = false;
 	}
 
 	/**
@@ -178,8 +198,9 @@ public class Sequence extends Activity implements OnTouchListener {
 		Log.d(className, "Displaying first use screen");
 		setContentView(R.layout.first_use);
 		Log.d(className, "First use screen set as view");
-		
-		gameBoardIsDisplayed = false;
+
+		setGameBoardNotVisible();
+		// gameBoardIsDisplayed = false;
 
 		((Button) findViewById(R.id.button_read_instructions))
 				.setOnClickListener(firstUseReadInstructionsClick);
@@ -272,8 +293,6 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		gameBoard.setSequenceLength(sequenceLength);
 	}
-	
-	
 
 	/**
 	 * Life cycle method - called when activity loses focus
@@ -285,6 +304,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	protected void onPause() {
 		super.onPause();
 
+		setGameBoardNotVisible();
 		saveModel();
 		saveGameStatistics();
 	}
@@ -310,7 +330,8 @@ public class Sequence extends Activity implements OnTouchListener {
 		int selectedLengthPosition;
 
 		setContentView(R.layout.setup);
-		gameBoardIsDisplayed = false;
+		setGameBoardNotVisible();
+		// gameBoardIsDisplayed = false;
 
 		RadioButton easy = (RadioButton) findViewById(R.id.radio_easy);
 		RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
@@ -354,7 +375,8 @@ public class Sequence extends Activity implements OnTouchListener {
 		String fileUrl;
 
 		setContentView(R.layout.help);
-		gameBoardIsDisplayed = false;
+		setGameBoardNotVisible();
+		// gameBoardIsDisplayed = false;
 
 		fileUrl = "file:///android_asset/help/";
 		fileUrl += Locale.getDefault().getLanguage();
@@ -412,7 +434,8 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private void showLicenseScreen() {
 		setContentView(R.layout.license);
-		gameBoardIsDisplayed = false;
+		setGameBoardNotVisible();
+		// gameBoardIsDisplayed = false;
 
 		WebView instructions = (WebView) findViewById(R.id.license);
 		instructions.loadUrl("file:///android_asset/license/license.html");
@@ -424,6 +447,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	private void saveModel() {
 		ObjectOutputStream out = null;
 
+		// gameBoard.getModel().signalGamePaused();
 		SharedPreferences settings = getSharedPreferences(
 				PREFERENCES_FILE_NAME, MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
@@ -476,6 +500,7 @@ public class Sequence extends Activity implements OnTouchListener {
 						.readObject();
 				if (!model.isWinner() && !model.isLoser()) {
 					gameBoard.setModel(model);
+					// gameBoard.getModel().signalGameRestored();
 				}
 			}
 			catch (Throwable throwable) {
@@ -543,13 +568,13 @@ public class Sequence extends Activity implements OnTouchListener {
 		try {
 			in = new ObjectInputStream(
 					openFileInput(SERIALIZED_GAME_STATISTICS_FILE_NAME));
-			gameStatistics = (GameStatistics) in.readObject();
+			gameStatistics = (GameStatisticsEngine) in.readObject();
 		}
 		catch (Throwable throwable) {
 			Log.w(className,
 					getResources().getString(
 							R.string.errormessage_stats_read_failed), throwable);
-			gameStatistics = new GameStatistics();
+			gameStatistics = new GameStatisticsEngine();
 		}
 		finally {
 			if (in != null) {
@@ -620,6 +645,12 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Start a new game, replacing the current game state
 	 */
 	private void startNewGame() {
+		SequenceHuntGameModel model = gameBoard.getModel();
+		if (model != null && !model.isLoser() && !model.isWinner()) {
+			gameStatistics.addGame(gameBoard.getModel(),
+					gameBoard.isDifficultySetToHard(), "New");
+		}
+
 		gameBoard.newGame();
 	}
 
@@ -654,14 +685,15 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private void showHistory() {
 		setContentView(R.layout.history);
-		gameBoardIsDisplayed = false;
+		setGameBoardNotVisible();
+		// gameBoardIsDisplayed = false;
 
 		TextView history = (TextView) findViewById(R.id.history);
 		((Button) findViewById(R.id.button_clipboard))
 				.setOnClickListener(historyClipboardClick);
 		history.setText(getResources().getString(R.string.label_version) + ": "
-				+ programVersion + "\n"
-				+ "Android: " + android.os.Build.VERSION.SDK_INT + "\n"
+				+ programVersion + "\n" + "Android: "
+				+ android.os.Build.VERSION.SDK_INT + "\n"
 				+ gameStatistics.reportHistoryCSV());
 	}
 
@@ -759,8 +791,7 @@ public class Sequence extends Activity implements OnTouchListener {
 			case DIALOG_STATS:
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage(
-						getResources().getString(
-								R.string.label_color_statistics))
+						getResources().getString(R.string.label_stats_title))
 						.setCancelable(true)
 						.setNeutralButton(
 								getResources().getString(R.string.button_close),
@@ -799,13 +830,12 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * For dialogs whose values are not static, handle the imminent presentation
 	 * of the dialog
 	 * 
-	 * This call is included to backward compatibility.  The
-	 * method is deprecated, but for pre-API Level 8 
-	 * (e.g. pre Android 2.1) installs it is this method 
-	 * that will be called.
+	 * This call is included to backward compatibility. The method is
+	 * deprecated, but for pre-API Level 8 (e.g. pre Android 2.1) installs it is
+	 * this method that will be called.
 	 * 
-	 * The method simply calls the replacement version, passing
-	 * null for the new "Bundle" parameter.
+	 * The method simply calls the replacement version, passing null for the new
+	 * "Bundle" parameter.
 	 */
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -813,7 +843,7 @@ public class Sequence extends Activity implements OnTouchListener {
 			onPrepareDialog(id, dialog, null);
 		}
 	}
-	
+
 	/**
 	 * For dialogs whose values are not static, handle the imminent presentation
 	 * of the dialog
@@ -821,6 +851,19 @@ public class Sequence extends Activity implements OnTouchListener {
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
 		switch (id) {
+			case DIALOG_WIN:
+				((AlertDialog) dialog).setMessage(getResources().getString(
+						R.string.message_win)
+						+ "\n\n"
+						+ String.format(
+								getResources().getString(
+										R.string.message_playing_time),
+								Formatter.getInstance().formatTimer(
+										gameBoard.getModel().getElapsedTime()))
+						+ "\n\n"
+						+ getResources()
+								.getString(R.string.question_play_again));
+				break;
 			case DIALOG_LOSE:
 				((AlertDialog) dialog).setMessage(getResources().getString(
 						R.string.message_lose)
@@ -830,15 +873,22 @@ public class Sequence extends Activity implements OnTouchListener {
 						+ ":\n"
 						+ gameBoard.getModel().getAnswerText(this)
 						+ "\n\n"
+						+ String.format(
+								getResources().getString(
+										R.string.message_playing_time),
+								Formatter.getInstance().formatTimer(
+										gameBoard.getModel().getElapsedTime()))
+						+ "\n\n"
 						+ getResources()
 								.getString(R.string.question_play_again));
 				break;
 			case DIALOG_STATS:
-				((AlertDialog) dialog)
-						.setMessage(getResources().getString(
-								R.string.label_color_statistics)
-								+ "\n\n"
-								+ gameBoard.getModel().reportColorCounts(this));
+				((AlertDialog) dialog).setMessage(getResources().getString(
+						R.string.label_stats_title)
+						+ "\n\n"
+						// + gameBoard.getModel().reportColorCounts(this)
+						+ reportStatistics());
+
 				break;
 			case DIALOG_INFO:
 				StringBuffer info;
@@ -855,33 +905,165 @@ public class Sequence extends Activity implements OnTouchListener {
 	}
 
 	/**
+	 * Return a message containing game statistics
+	 * 
+	 * @return A text message with game statistics
+	 */
+	public String reportStatistics() {
+		GameStatistics statistics;
+		String errorMsg;
+
+		statistics = gameStatistics.getGameStatistics();
+
+		StringBuffer report = new StringBuffer();
+
+		errorMsg = statistics.getStatsError();
+
+		if (errorMsg != null && errorMsg.length() > 0) {
+			report.append(getResources().getString(R.string.label_stats_error));
+			report.append(": ");
+			report.append(errorMsg);
+		} else {
+			report.append(getResources().getString(
+					R.string.label_stats_num_games));
+			report.append(": ");
+			report.append(statistics.getNumGamesStored());
+			report.append("\n");
+			report.append(getResources()
+					.getString(R.string.label_stats_num_won));
+			report.append(": ");
+			report.append(statistics.getNumWins());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_num_lost));
+			report.append(": ");
+			report.append(statistics.getNumLosses());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_num_quit));
+			report.append(": ");
+			report.append(statistics.getNumQuits());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_num_easy));
+			report.append(": ");
+			report.append(statistics.getNumEasy());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_num_hard));
+			report.append(": ");
+			report.append(statistics.getNumHard());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_avg_tries_per_game));
+			report.append(": ");
+			report.append(statistics.getAverageTries());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_avg_time_per_game_won));
+			report.append(": ");
+			report.append(Formatter.getInstance().formatTimer(
+					statistics.getAverageWinTimeMs()));
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_avg_time_per_game_lost));
+			report.append(": ");
+			report.append(Formatter.getInstance().formatTimer(
+					statistics.getAverageLoseTimeMs()));
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_total_tries));
+			report.append(": ");
+			report.append(statistics.getTotalTries());
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_total_time_games_won));
+			report.append(": ");
+			report.append(Formatter.getInstance().formatTimer(
+					statistics.getTotalWinTimeMs()));
+			report.append("\n");
+			report.append(getResources().getString(
+					R.string.label_stats_total_time_games_lost));
+			report.append(": ");
+			report.append(Formatter.getInstance().formatTimer(
+					statistics.getTotalLostTimeMs()));
+			report.append("\n");
+
+			report.append("\n");
+
+			report.append(getResources().getString(R.string.label_stats_colors));
+
+			report.append("\n");
+
+			report.append(getResources().getString(R.string.color_black)
+					+ ": "
+					+ statistics
+							.getColorCount(SequenceHuntGameModel.COLOR_BLACK));
+			report.append('\n');
+			report.append(getResources().getString(R.string.color_blue)
+					+ ": "
+					+ statistics
+							.getColorCount(SequenceHuntGameModel.COLOR_BLUE));
+			report.append('\n');
+			report.append(getResources().getString(R.string.color_green)
+					+ ": "
+					+ statistics
+							.getColorCount(SequenceHuntGameModel.COLOR_GREEN));
+			report.append('\n');
+			report.append(getResources().getString(R.string.color_red) + ": "
+					+ statistics.getColorCount(SequenceHuntGameModel.COLOR_RED));
+			report.append('\n');
+			report.append(getResources().getString(R.string.color_white)
+					+ ": "
+					+ statistics
+							.getColorCount(SequenceHuntGameModel.COLOR_WHITE));
+			report.append('\n');
+			report.append(getResources().getString(R.string.color_yellow)
+					+ ": "
+					+ statistics
+							.getColorCount(SequenceHuntGameModel.COLOR_YELLOW));
+		}
+
+		return report.toString();
+	}
+
+	/**
 	 * Handle touch screen interaction
 	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
-		if (v instanceof OnTouchListener) {
-			Bundle args = new Bundle();
-			args.putString("XY",
-					"(" + (int) event.getX() + "," + (int) event.getY() + ")");
-			args.putString("Precision", "(" + event.getXPrecision() + ","
-					+ event.getYPrecision() + ")");
-			args.putString("Raw", "(" + (int) event.getRawX() + ","
-					+ (int) event.getRawY() + ")");
+		boolean processed;
 
-			Log.d(className,
-					"XY (" + (int) event.getX() + "," + (int) event.getY()
-							+ ")");
-			Log.d(className, "Precision (" + event.getXPrecision() + ","
-					+ event.getYPrecision() + ")");
-			Log.d(className, "Raw (" + (int) event.getRawX() + ","
-					+ (int) event.getRawY() + ")");
+		if (v instanceof OnTouchListener) {
+			/*
+			 * Bundle args = new Bundle(); args.putString("XY", "(" + (int)
+			 * event.getX() + "," + (int) event.getY() + ")");
+			 * args.putString("Precision", "(" + event.getXPrecision() + "," +
+			 * event.getYPrecision() + ")"); args.putString("Raw", "(" + (int)
+			 * event.getRawX() + "," + (int) event.getRawY() + ")");
+			 * 
+			 * Log.d(className, "XY (" + (int) event.getX() + "," + (int)
+			 * event.getY() + ")"); Log.d(className, "Precision (" +
+			 * event.getXPrecision() + "," + event.getYPrecision() + ")");
+			 * Log.d(className, "Raw (" + (int) event.getRawX() + "," + (int)
+			 * event.getRawY() + ")");
+			 */
 			// showDialog(DIALOG_ALERT, args);
-			((OnTouchListener) v).onTouch(v, event);
-			if (gameBoard.getModel().isWinner()) {
-				showDialog(DIALOG_WIN);
-			} else if (gameBoard.getModel().isLoser()) {
-				showDialog(DIALOG_LOSE);
+			Log.d(className, "Screen touch detected, process");
+			processed = ((OnTouchListener) v).onTouch(v, event);
+
+			if (processed) {
+				if (gameBoard.getModel().isWinner()) {
+					Log.d(className, "Screen touch processed, winner detected");
+					gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
+							gameBoard.getModel());
+					showDialog(DIALOG_WIN);
+				} else if (gameBoard.getModel().isLoser()) {
+					Log.d(className, "Screen touch processed, loser detected");
+					gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
+							gameBoard.getModel());
+					showDialog(DIALOG_LOSE);
+				}
 			}
 			return true;
 		}
@@ -896,6 +1078,15 @@ public class Sequence extends Activity implements OnTouchListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_ENTER) {
 			gameBoard.notifyTry();
+			if (gameBoard.getModel().isWinner()) {
+				gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
+						gameBoard.getModel());
+				showDialog(DIALOG_WIN);
+			} else if (gameBoard.getModel().isLoser()) {
+				gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
+						gameBoard.getModel());
+				showDialog(DIALOG_LOSE);
+			}
 		} else if (keyCode == KeyEvent.KEYCODE_DEL) {
 			gameBoard.notifyDeleteChoice();
 		} else if (keyCode == KeyCodeConverter.getKeyCode(getResources()
@@ -920,12 +1111,6 @@ public class Sequence extends Activity implements OnTouchListener {
 			return super.onKeyDown(keyCode, event);
 		}
 
-		if (gameBoard.getModel().isWinner()) {
-			showDialog(DIALOG_WIN);
-		} else if (gameBoard.getModel().isLoser()) {
-			showDialog(DIALOG_LOSE);
-		}
-
 		return true;
 	}
 
@@ -937,8 +1122,9 @@ public class Sequence extends Activity implements OnTouchListener {
 		if (gameBoardIsDisplayed) {
 			Sequence.this.finish();
 		} else {
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
 	}
 
@@ -950,14 +1136,19 @@ public class Sequence extends Activity implements OnTouchListener {
 			RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
 			Spinner spinnerSequenceLength = (Spinner) findViewById(R.id.spinner_sequence_length);
 			try {
-				setSequenceLength(Integer.parseInt(spinnerSequenceLength.getSelectedItem().toString()));
+				setSequenceLength(Integer.parseInt(spinnerSequenceLength
+						.getSelectedItem().toString()));
 			}
 			catch (Throwable throwable) {
-				Log.e(className, "Unable to set new sequence length: " + spinnerSequenceLength.getSelectedItem().toString(), throwable);
+				Log.e(className, "Unable to set new sequence length: "
+						+ spinnerSequenceLength.getSelectedItem().toString(),
+						throwable);
 			}
 			setDifficultyToHard(hard.isChecked());
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
 	};
 
@@ -966,8 +1157,9 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener setupCancelClick = new OnClickListener() {
 		public void onClick(View v) {
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
 	};
 
@@ -976,8 +1168,9 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener helpDoneClick = new OnClickListener() {
 		public void onClick(View v) {
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
 	};
 
@@ -1005,8 +1198,9 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private OnClickListener firstUsePlayClick = new OnClickListener() {
 		public void onClick(View v) {
-			setContentView(gameBoard);
-			gameBoardIsDisplayed = true;
+			displayGameboard();
+			// setContentView(gameBoard);
+			// gameBoardIsDisplayed = true;
 		}
 	};
 }

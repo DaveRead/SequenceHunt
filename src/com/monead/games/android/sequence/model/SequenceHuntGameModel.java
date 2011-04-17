@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import com.monead.games.android.sequence.R;
@@ -42,28 +40,28 @@ import android.util.Log;
  * 
  */
 public class SequenceHuntGameModel implements Serializable {
-	private static final long serialVersionUID = 5685518061216785732L;
+	private static final long serialVersionUID = 5685518061216785733L;
 
 	/**
 	 * Maximum number of attempts to discover the sequence
 	 */
 	private static int MAX_TRYS_ALLOWED = 10;
-	
+
 	/**
 	 * Default size of the sequence
 	 */
 	public static int DEFAULT_SEQUENCE_LENGTH = 4;
-	
+
 	/**
 	 * Minimum size of the sequence
 	 */
 	public static int MINIMUM_SEQUENCE_LENGTH = 4;
-	
+
 	/**
 	 * Maximum size of the sequence
 	 */
 	public static int MAXIMUM_SEQUENCE_LENGTH = 8;
-	
+
 	/**
 	 * Value of an unselected position
 	 */
@@ -82,16 +80,14 @@ public class SequenceHuntGameModel implements Serializable {
 	/**
 	 * The number of colors available in the game
 	 * 
-	 * This must agree with the number of colors 
-	 * defined with constants
+	 * This must agree with the number of colors defined with constants
 	 */
-	private static final int NUM_COLORS = 6;
+	public static final int NUM_COLORS = 6;
 
 	/**
 	 * CVlue value indicating no match on color
 	 * 
-	 * Must have value 0 since this will be default 
-	 * for new clue array
+	 * Must have value 0 since this will be default for new clue array
 	 */
 	public static final int CLUE_COMPLETELY_INCORRECT = 0;
 
@@ -143,28 +139,26 @@ public class SequenceHuntGameModel implements Serializable {
 	 * Length of the sequence
 	 */
 	private int sequenceLength;
-	
+
 	/**
-	 * Has the game started - typically starts when the user
-	 * selects the first color
+	 * Has the game started - typically starts when the user selects the first
+	 * color
 	 */
 	private boolean gameStarted;
-	
+
 	/**
-	 * How long has the game been (actively) going on?
-	 * This will not count time when the app is hidden
-	 * or closed.
+	 * How long has the game been (actively) going on? This will not count time
+	 * when the app is hidden or closed.
 	 */
 	private long elapsedMS;
-	
+
 	/**
-	 * The date value when the elapsedMS value
-	 * was last updated.  Doesn't get persisted
-	 * since time when app is shutdown should
-	 * not count toward playing time.
+	 * The date value when the elapsedMS value was last updated. Doesn't get
+	 * persisted since time when app is shutdown should not count toward playing
+	 * time.
 	 */
 	transient private Date latestStartupDate;
-	
+
 	/**
 	 * Stores the computed clues for the trys
 	 * 
@@ -172,26 +166,6 @@ public class SequenceHuntGameModel implements Serializable {
 	 * require two elements, the clue itself and the color represented.
 	 */
 	private int[][][] clue;
-
-	/**
-	 * The count of randomly selected colors so far chosen by this model. Allows
-	 * for manual checking of randomness.
-	 */
-	private static Map<Integer, Integer> colorCounts;
-
-	/**
-	 * Initialize the selected color counts at 0
-	 */
-	static {
-		colorCounts = new HashMap<Integer, Integer>();
-
-		colorCounts.put(COLOR_BLACK, 0);
-		colorCounts.put(COLOR_BLUE, 0);
-		colorCounts.put(COLOR_GREEN, 0);
-		colorCounts.put(COLOR_RED, 0);
-		colorCounts.put(COLOR_WHITE, 0);
-		colorCounts.put(COLOR_YELLOW, 0);
-	}
 
 	/**
 	 * Flags that the latest try is correct and the user has won.
@@ -227,7 +201,7 @@ public class SequenceHuntGameModel implements Serializable {
 		Log.d(className, "Resulting sequence length: " + getSequenceLength());
 		setup();
 	}
-	
+
 	private void setup() {
 		guess = new int[MAX_TRYS_ALLOWED][getSequenceLength()];
 		clue = new int[MAX_TRYS_ALLOWED][getSequenceLength()][NUM_CLUE_METADATA];
@@ -257,7 +231,6 @@ public class SequenceHuntGameModel implements Serializable {
 					answer[cell] = COLOR_YELLOW;
 					break;
 			}
-			trackColorChoice(answer[cell]);
 		}
 
 		currentTry = 0;
@@ -269,64 +242,29 @@ public class SequenceHuntGameModel implements Serializable {
 	/**
 	 * Sets the sequence length for the model
 	 * 
-	 * If the length supplied is less than the minimum allowed or
-	 * greater than the maximum allowed, it will be set to the
-	 * default length.
+	 * If the length supplied is less than the minimum allowed or greater than
+	 * the maximum allowed, it will be set to the default length.
 	 * 
-	 * @param sequenceLength The length of the sequence, which must be
-	 * 	between the constant values of MIMUMUM_SEQUENCE_LENGTH and 
-	 *   MAXIMUM_SEQUENCE_LENGTH
+	 * @param sequenceLength
+	 *            The length of the sequence, which must be between the constant
+	 *            values of MIMUMUM_SEQUENCE_LENGTH and MAXIMUM_SEQUENCE_LENGTH
 	 */
 	private void setSequenceLength(int sequenceLength) {
-		if (sequenceLength >= MINIMUM_SEQUENCE_LENGTH && sequenceLength <= MAXIMUM_SEQUENCE_LENGTH) {
+		if (sequenceLength >= MINIMUM_SEQUENCE_LENGTH
+				&& sequenceLength <= MAXIMUM_SEQUENCE_LENGTH) {
 			this.sequenceLength = sequenceLength;
-			Log.d(className, "setSequenceLength, used supplied value: " + sequenceLength);
+			Log.d(className, "setSequenceLength, used supplied value: "
+					+ sequenceLength);
 		} else {
 			this.sequenceLength = DEFAULT_SEQUENCE_LENGTH;
-			Log.d(className, "setSequenceLength, ignored supplied value: " + sequenceLength + " and used default: " + this.sequenceLength);
+			Log.d(className, "setSequenceLength, ignored supplied value: "
+					+ sequenceLength + " and used default: "
+					+ this.sequenceLength);
 		}
 	}
-	
-	/**
-	 * Maintain the counts of each selected color
-	 * 
-	 * @param color
-	 *            The chosen color
-	 */
-	private void trackColorChoice(int color) {
-		Integer currentCount;
-
-		currentCount = colorCounts.get(color);
-		currentCount++;
-		colorCounts.put(color, currentCount);
-	}
 
 	/**
-	 * Return a message containing the counts of each color selected by this
-	 * model
-	 * 
-	 * @return A text message with color counts
-	 */
-	public String reportColorCounts(Context context) {
-		StringBuffer report = new StringBuffer();
-
-		report.append(context.getResources().getString(R.string.color_black) + ": " + colorCounts.get(COLOR_BLACK));
-		report.append('\n');
-		report.append(context.getResources().getString(R.string.color_blue) + ": " + colorCounts.get(COLOR_BLUE));
-		report.append('\n');
-		report.append(context.getResources().getString(R.string.color_green) + ": " + colorCounts.get(COLOR_GREEN));
-		report.append('\n');
-		report.append(context.getResources().getString(R.string.color_red) + ": " + colorCounts.get(COLOR_RED));
-		report.append('\n');
-		report.append(context.getResources().getString(R.string.color_white) + ": " + colorCounts.get(COLOR_WHITE));
-		report.append('\n');
-		report.append(context.getResources().getString(R.string.color_yellow) + ": " + colorCounts.get(COLOR_YELLOW));
-
-		return report.toString();
-	}
-
-	/**
-	 * Set the winner status for the model
+	 * Sets the winner status for the model
 	 * 
 	 * @param winner
 	 *            True if a winner
@@ -370,8 +308,21 @@ public class SequenceHuntGameModel implements Serializable {
 	private void signalGameStart() {
 		gameStarted = true;
 		latestStartupDate = new Date();
+		Log.d(className, "signalGameStart at " + latestStartupDate.getTime());
 	}
-	
+
+	/**
+	 * Get the number of MS the game has been going on. If the game has ended
+	 * (win or lose) this will be the total number of MS the game took.
+	 * 
+	 * @return The number of MS the game has taken.
+	 */
+	public long getElapsedTime() {
+		updateElapsedTime();
+		Log.d(className, "getElapsedTime returning " + elapsedMS);
+		return elapsedMS;
+	}
+
 	/**
 	 * Update the MS elapsed for the current game
 	 * 
@@ -380,37 +331,54 @@ public class SequenceHuntGameModel implements Serializable {
 	public void updateElapsedTime() {
 		Date date;
 
-		if (gameStarted && latestStartupDate != null) {
-			date = new Date();
-			elapsedMS += date.getTime() - latestStartupDate.getTime();
-			latestStartupDate = date;
-		} else {
-			if (gameStarted) {
-				// Probably back from being paused
-				latestStartupDate = new Date();
+		if (gameStarted && !isLoser() && !isWinner()) {
+			if (gameStarted && latestStartupDate != null) {
+				date = new Date();
+				elapsedMS += date.getTime() - latestStartupDate.getTime();
+				latestStartupDate = date;
+				Log.d(className, "updateElapsedTime with a start time latestStartupDate [" + latestStartupDate.getTime() + "] date.getTime [" + date.getTime() + "] elapsedMS [" + elapsedMS + "]");			
+			} else {
+				if (gameStarted) {
+					// Probably back from being paused
+					latestStartupDate = new Date();
+					Log.d(className, "updateElapsedTime with no start time latestStartupDate.getTime [" + latestStartupDate.getTime() + "]");
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Signal that a game has ended
 	 * 
 	 * TODO Complete the implementation of the game timer
 	 */
 	public void signalGameEnd() {
+		Log.d(className, "signalGameEnd");
+		updateElapsedTime();
 		gameStarted = false;
 	}
-	
+
 	/**
-	 * Signal that a game is being paused.  Elapsed
-	 * time will not be counted toward the game.
+	 * Signal that a game is being paused. Elapsed time will not be counted
+	 * toward the game.
 	 * 
 	 * TODO Complete the implementation of the game timer
 	 */
 	public void signalGamePaused() {
+		Log.d(className, "signalGamePaused");
 		updateElapsedTime();
 	}
-	
+
+	/**
+	 * Signal that a game is being restored.
+	 * 
+	 * TODO Complete the implementation of the game timer
+	 */
+	public void signalGameRestored() {
+		latestStartupDate = new Date();
+		Log.d(className, "signalGameRestored latestStartupDate.getTime [" + latestStartupDate.getTime() + "]");
+	}
+
 	/**
 	 * Add a guess to the current try
 	 * 
@@ -420,10 +388,13 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return True if there was a spot left in the current try for a guess
 	 */
 	public boolean addGuess(int color) {
+		Log.d(className, "addGuess color [" + color + "]");
 		if (!gameStarted) {
 			signalGameStart();
 		}
 		
+		updateElapsedTime();
+
 		if (currentTry < MAX_TRYS_ALLOWED && currentPosit < getSequenceLength()) {
 			guess[currentTry][currentPosit] = color;
 			++currentPosit;
@@ -454,7 +425,8 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return True if a full set of guesses was supplied
 	 */
 	public boolean submitGuess() {
-		if (currentTry < MAX_TRYS_ALLOWED && currentPosit == getSequenceLength()) {
+		if (currentTry < MAX_TRYS_ALLOWED
+				&& currentPosit == getSequenceLength()) {
 			calcClues();
 			++currentTry;
 			currentPosit = 0;
@@ -489,9 +461,14 @@ public class SequenceHuntGameModel implements Serializable {
 		}
 
 		if (clueNum == getSequenceLength()) {
+			updateElapsedTime();
+			signalGameEnd();
 			setWinner(true);
+		} else if (isLoser()) {
+			updateElapsedTime();
+			signalGameEnd();
 		}
-		
+
 		numberOfCorrectPositionClues = clueNum;
 
 		if (!isWinner()) {
@@ -508,59 +485,59 @@ public class SequenceHuntGameModel implements Serializable {
 				}
 			}
 		}
-		
+
 		shuffleClues(numberOfCorrectPositionClues, clueNum);
 	}
 
 	/**
-	 * Randomize the order of the clues (keeping
-	 * each clue type [e.g. position correct, position incorrect]
-	 * together).  This is necessary to prevent the player
-	 * from using the order of the "position correct" clues
-	 * to figure out which clue applies to which 
-	 * position.
+	 * Randomize the order of the clues (keeping each clue type [e.g. position
+	 * correct, position incorrect] together). This is necessary to prevent the
+	 * player from using the order of the "position correct" clues to figure out
+	 * which clue applies to which position.
 	 * 
-	 * e.g. if the sequence is yellow, red, yellow, green
-	 * and the clues are reported back without randomization,
-	 * then a try of yellow, green, red, yellow
-	 * will report yellow and red diamonds (in that order everytime)
-	 * followed by a yellow triangle.  The fact that the
-	 * red diamond follows the yellow diamond would inform the
-	 * player that it was the first yellow that was in the correct
-	 * position (since it is the only yellow before the red guess).
-	 * The randomization prevents the player from finding such 
-	 * a pattern from try to try.
+	 * e.g. if the sequence is yellow, red, yellow, green and the clues are
+	 * reported back without randomization, then a try of yellow, green, red,
+	 * yellow will report yellow and red diamonds (in that order everytime)
+	 * followed by a yellow triangle. The fact that the red diamond follows the
+	 * yellow diamond would inform the player that it was the first yellow that
+	 * was in the correct position (since it is the only yellow before the red
+	 * guess). The randomization prevents the player from finding such a pattern
+	 * from try to try.
 	 * 
-	 * @param numberOfCorrectPositionClues The number of clues indicating a correct color and position
-	 * @param numClues The total number of clues
+	 * @param numberOfCorrectPositionClues
+	 *            The number of clues indicating a correct color and position
+	 * @param numClues
+	 *            The total number of clues
 	 */
 	private void shuffleClues(int numberOfCorrectPositionClues, int numClues) {
 		List<Integer> temp;
-				
+
 		// Shuffle the correct position clues
 		if (numberOfCorrectPositionClues > 1) {
 			temp = new ArrayList<Integer>();
-			for (int index = 0;index < numberOfCorrectPositionClues;++index) {
+			for (int index = 0; index < numberOfCorrectPositionClues; ++index) {
 				temp.add(clue[currentTry][index][CLUE_METADATA_COLOR]);
 			}
 			Collections.shuffle(temp);
-			for (int index = 0;index < numberOfCorrectPositionClues;++index) {
+			for (int index = 0; index < numberOfCorrectPositionClues; ++index) {
 				clue[currentTry][index][CLUE_METADATA_COLOR] = temp.get(index);
 			}
 		}
-		
+
 		// Shuffle the incorrect position clues
 		if (numClues - numberOfCorrectPositionClues > 1) {
 			temp = new ArrayList<Integer>();
-			for (int index = numberOfCorrectPositionClues;index < numClues;++index) {
+			for (int index = numberOfCorrectPositionClues; index < numClues; ++index) {
 				temp.add(clue[currentTry][index][CLUE_METADATA_COLOR]);
 			}
 			Collections.shuffle(temp);
-			for (int index = 0;index < temp.size();++index) {
-				clue[currentTry][index + numberOfCorrectPositionClues][CLUE_METADATA_COLOR] = temp.get(index);
+			for (int index = 0; index < temp.size(); ++index) {
+				clue[currentTry][index + numberOfCorrectPositionClues][CLUE_METADATA_COLOR] = temp
+						.get(index);
 			}
 		}
 	}
+
 	/**
 	 * Get the color index values for the correct sequence
 	 * 
@@ -568,19 +545,19 @@ public class SequenceHuntGameModel implements Serializable {
 	 */
 	public String getAnswerValue() {
 		String answerValue;
-		
+
 		answerValue = "";
-		
-		for (int posit = 0;posit < getSequenceLength();++posit) {
+
+		for (int posit = 0; posit < getSequenceLength(); ++posit) {
 			if (answerValue.length() > 0) {
 				answerValue += ",";
 			}
 			answerValue += answer[posit];
 		}
-		
+
 		return answerValue;
 	}
-	
+
 	/**
 	 * Get a text description of the correct sequence
 	 * 
@@ -595,25 +572,33 @@ public class SequenceHuntGameModel implements Serializable {
 		for (int posit = 0; posit < getSequenceLength(); ++posit) {
 			switch (answer[posit]) {
 				case COLOR_BLACK:
-					colorName = context.getResources().getString(R.string.color_black);
+					colorName = context.getResources().getString(
+							R.string.color_black);
 					break;
 				case COLOR_BLUE:
-					colorName = context.getResources().getString(R.string.color_blue);
+					colorName = context.getResources().getString(
+							R.string.color_blue);
 					break;
 				case COLOR_GREEN:
-					colorName = context.getResources().getString(R.string.color_green);
+					colorName = context.getResources().getString(
+							R.string.color_green);
 					break;
 				case COLOR_RED:
-					colorName = context.getResources().getString(R.string.color_red);
+					colorName = context.getResources().getString(
+							R.string.color_red);
 					break;
 				case COLOR_WHITE:
-					colorName = context.getResources().getString(R.string.color_white);
+					colorName = context.getResources().getString(
+							R.string.color_white);
 					break;
 				case COLOR_YELLOW:
-					colorName = context.getResources().getString(R.string.color_yellow);
+					colorName = context.getResources().getString(
+							R.string.color_yellow);
 					break;
 				default:
-					colorName = context.getResources().getString(R.string.color_unknown) + " (" + answer[posit] + ")";
+					colorName = context.getResources().getString(
+							R.string.color_unknown)
+							+ " (" + answer[posit] + ")";
 					break;
 			}
 			if (answerText.length() > 0) {
@@ -631,7 +616,7 @@ public class SequenceHuntGameModel implements Serializable {
 	 * @return The length of the sequence
 	 */
 	public int getSequenceLength() {
-		Log.d(className, "getSequenceLength returning: " + sequenceLength);
+		//Log.d(className, "getSequenceLength returning: " + sequenceLength);
 		return sequenceLength;
 	}
 
@@ -723,8 +708,10 @@ public class SequenceHuntGameModel implements Serializable {
 	/**
 	 * Get the guessed color for a position
 	 * 
-	 * @param row The row (try) being checked
-	 * @param tryNum The guess position being checked
+	 * @param row
+	 *            The row (try) being checked
+	 * @param tryNum
+	 *            The guess position being checked
 	 * 
 	 * @return The color guessed at the selected position
 	 */

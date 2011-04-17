@@ -1,112 +1,156 @@
 package com.monead.games.android.sequence.reporting;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.monead.games.android.sequence.model.SequenceHuntGameModel;
-
-/**
- * Copyright 2011, David S. Read
- * 
- * This file is part of Sequence Hunt.
- *
- * Sequence Hunt is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Sequence Hunt is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with Sequence Hunt.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
-/**
- * Collect and house game statistics
- */
 public class GameStatistics implements Serializable {
-	private static final long serialVersionUID = 2350057697130863735L;
+	private static final long serialVersionUID = 3931550416819079788L;
 
 	/**
-	 * Maximum number of historical games for which to
-	 * hold statistics
+	 * The count of randomly selected colors so far chosen by this model. Allows
+	 * for manual checking of randomness.
 	 */
-	private final static int MAX_GAMES_TO_STORE = 300;
+	private Map<Integer, Integer> colorCounts;
 	
-	/**
-	 * The total number of games played
-	 */
-	private long gameCount;
-	
-	/**
-	 * The historical information for each game
-	 */
-	private List<String> gameHistory;
-	
-	/**
-	 * Setup the game history array
-	 */
+	private long numWins;
+	private long numLosses;
+	private long numQuits;
+	private long numEasy;
+	private long numHard;
+	private long totalTries;
+	private long totalWinTimeMs;
+	private long totalLostTimeMs;
+
+	private String statsError;
+
 	public GameStatistics() {
-		gameHistory = new ArrayList<String>();
+		colorCounts = new HashMap<Integer, Integer>();
+	}
+	
+	public long getNumGamesStored() {
+		return numWins + numLosses + numQuits;
+	}
+	
+	public void addColor(int color) {
+		Integer current;
+		
+		current = colorCounts.get(color);
+		if (current == null) {
+			current = 0;
+		}
+		
+		current++;
+		
+		colorCounts.put(color, current);
+	}
+	
+	public int getColorCount(int colorIndex) {
+		Integer count;
+		
+		count = colorCounts.get(colorIndex);
+		
+		if (count == null) {
+			count = 0;
+		}
+		
+		return count;
 	}
 
-	/**
-	 * Add a game to history
-	 * 
-	 * This method will assure that the MAX_GAMES_TO_STORE
-	 * limit is enforced.
-	 * 
-	 * @param model The model for the game being added
-	 */
-	public void addGame(SequenceHuntGameModel model) {
-		while (gameHistory.size() >= MAX_GAMES_TO_STORE) {
-			gameHistory.remove(0);
-		}
-		gameCount++;
-		gameHistory.add(gameCount + "," + model.getAnswerValue());
+	public long getNumWins() {
+		return numWins;
 	}
-	
-	/**
-	 * Flag a game as deleted, meaning that it
-	 * will not be played.
-	 * 
-	 * The method does a logical delete, so that the
-	 * information will be retained but flagged as
-	 * deleted.
-	 */
-	public void deleteLastGame() {
-		String lastGameStatistics;
-		
-		if (gameHistory.size() > 0) {
-			lastGameStatistics = gameHistory.remove(gameHistory.size() - 1);
-			if (lastGameStatistics.indexOf("Deleted") == -1) {
-				lastGameStatistics += ",Deleted";
-			}
-			gameHistory.add(lastGameStatistics);
+
+	public void addWin() {
+		++numWins;
+	}
+
+	public long getNumLosses() {
+		return numLosses;
+	}
+
+	public void addLoss() {
+		++numLosses;
+	}
+
+	public long getNumQuits() {
+		return numQuits;
+	}
+
+	public void addQuit() {
+		++numQuits;
+	}
+
+	public long getNumEasy() {
+		return numEasy;
+	}
+
+	public void addEasy() {
+		++numEasy;
+	}
+
+	public long getNumHard() {
+		return numHard;
+	}
+
+	public void addHard() {
+		++numHard;
+	}
+
+	public long getTotalTries() {
+		return totalTries;
+	}
+
+	public void addTries(long numTries) {
+		totalTries += numTries;
+	}
+
+	public long getTotalWinTimeMs() {
+		return totalWinTimeMs;
+	}
+
+	public void addWinTimeMS(long winTimeMs) {
+		totalWinTimeMs += winTimeMs;
+	}
+
+	public long getTotalLostTimeMs() {
+		return totalLostTimeMs;
+	}
+
+	public void addLostTimeMS(long lostTimeMs) {
+		totalLostTimeMs += lostTimeMs;
+	}
+
+	public int getAverageTries() {
+		if (getNumGamesStored() > 0) {
+			return (int)((double) getTotalTries() / getNumGamesStored());
+		} else {
+			return 0;
 		}
 	}
-	
-	/**
-	 * Create a CSV report of each game's history
-	 * New lines separate each game
-	 * 
-	 * @return The CSV report
-	 */
-	public String reportHistoryCSV() {
-		StringBuffer history;
-		
-		history = new StringBuffer();
-		
-		for (String value : gameHistory) {
-			history.append(value);
-			history.append('\n');
+
+	public long getAverageWinTimeMs() {
+		if (getNumWins() > 0) {
+			return (long)((double) getTotalWinTimeMs() / getNumWins());
+		} else {
+			return 0l;
 		}
-		
-		return history.toString();
 	}
+
+	public long getAverageLoseTimeMs() {
+		if (getNumLosses() > 0) {
+			return (long)((double) getTotalLostTimeMs() / getNumLosses());
+		} else {
+			return 0l;
+		}
+	}
+
+	public String getStatsError() {
+		return statsError;
+	}
+
+	public void setStatsError(String statsError) {
+		this.statsError = statsError;
+	}
+
 }

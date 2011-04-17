@@ -10,9 +10,10 @@ import java.util.Map;
 
 import com.monead.games.android.sequence.event.ColorChoiceListener;
 import com.monead.games.android.sequence.model.SequenceHuntGameModel;
-import com.monead.games.android.sequence.reporting.GameStatistics;
+import com.monead.games.android.sequence.reporting.GameStatisticsEngine;
 import com.monead.games.android.sequence.ui.shape.DiamondShape;
 import com.monead.games.android.sequence.ui.shape.TriangleShape;
+import com.monead.games.android.sequence.util.Formatter;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -134,7 +135,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * response to the touch.
 	 */
 	public int inputRange[][] = new int[8][5];
-
+	
 	/**
 	 * The model for the current game
 	 */
@@ -159,18 +160,18 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	/**
 	 * Track statistics about game operation
 	 */
-	private GameStatistics gameStatistics;
+//	private GameStatistics gameStatistics;
 
 	/**
 	 * Setup the game board using the supplied Context
 	 * 
 	 * @param context The context to update
 	 */
-	public SequenceGameBoard(Context context, GameStatistics gameStatistics, int sequenceLength) {
+	public SequenceGameBoard(Context context, GameStatisticsEngine gameStatistics, int sequenceLength) {
 		super(context);
 
 		//gameModel = new SequenceHuntGameModel();
-		this.gameStatistics = gameStatistics;
+//		this.gameStatistics = gameStatistics;
 		setSequenceLength(sequenceLength);
 //		newGame();
 	}
@@ -180,7 +181,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 */
 	public void newGame() {
 		gameModel = new SequenceHuntGameModel(sequenceLength);
-		gameStatistics.addGame(gameModel);
+//		gameStatistics.addGame(gameModel);
 		invalidate();
 	}
 	
@@ -198,7 +199,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 */
 	public void setModel(SequenceHuntGameModel model) {
 		this.gameModel = model;
-		gameStatistics.deleteLastGame();
+//		gameStatistics.deleteLastGame();
 		invalidate();
 	}
 	
@@ -279,17 +280,21 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 	 * @param circleArea The height of the area that is available
 	 * 	at the top of the canvas
 	 */
-	private void drawTimer(Canvas canvas, int circleArea) {
+	private void drawTimer(Canvas canvas, int circleArea, int vertSpacing) {
 		Paint paint;
-		SimpleDateFormat dateFormat;
-		dateFormat = new SimpleDateFormat("HH:MM:ss");
-		
+
+		ShapeDrawable drawable;
+		drawable = new ShapeDrawable(new RectShape());
+		drawable.getPaint().setColor(Color.DKGRAY);
+		drawable.setBounds(0, 0, getWidth(), circleArea - vertSpacing);
+		drawable.draw(canvas);
+
 		paint = new Paint();
 		paint.setTextAlign(Align.CENTER);
-		paint.setTextSize(12);
+		paint.setTextSize(16);
 		paint.setColor(Color.WHITE);
 		
-//		canvas.drawText("Test Message" + dateFormat.format(new Date()), canvas.getWidth() / 2, circleArea/2, paint);
+		canvas.drawText(Formatter.getInstance().formatTimer(getModel().getElapsedTime()), canvas.getWidth() / 2, circleArea/2, paint);
 	}
 
 	/**
@@ -344,7 +349,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
 		drawable.setBounds(0, 0, getWidth(), 1);
 		drawable.draw(canvas);
 
-//		drawTimer(canvas, circleArea);
+		//drawTimer(canvas, circleArea, vertSpacing);
 		
 		for (int row = 0; row < gameModel.getMaxTrys(); ++row) {
 			drawRow(canvas, row, xPadding, circleArea, horizSpacing,
