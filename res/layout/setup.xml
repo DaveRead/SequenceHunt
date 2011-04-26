@@ -23,6 +23,26 @@
           		android:layout_height="wrap_content"
           		android:text="@string/radiobutton_hard" />
 	</RadioGroup>
+
+	<TextView android:id="@+id/label" 
+    		android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:textColor="#c0c0ff"
+            android:textSize="20sp"
+            android:textStyle="bold" 
+            android:text="@string/title_sound_setup" />
+    <RadioGroup android:layout_width="fill_parent"
+      		android:layout_height="wrap_content"
+      		android:orientation="vertical">
+		<RadioButton android:id="@+id/sound_on"
+        		android:layout_width="wrap_content"
+          		android:layout_height="wrap_content"
+          		android:text="@string/radiobutton_sound_on" />
+      	<RadioButton android:id="@+id/sound_off"
+          		android:layout_width="wrap_content"
+          		android:layout_height="wrap_content"
+          		android:text="@string/radiobutton_sound_off" />
+	</RadioGroup>
 	
 	<TextView android:id="@+id/label" 
     		android:layout_width="fill_parent" 

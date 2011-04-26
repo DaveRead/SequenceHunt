@@ -7,8 +7,9 @@
     <string name="title_history">History</string>
     <string name="title_license">License</string>
     <string name="title_setup">Level of Difficulty</string>
+    <string name="title_sound_setup">Sound</string>
     <string name="message_welcome_initial">\nThank you for installing Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">This version improves the game statistics tracking and reporting.\n</string>
+    <string name="message_welcome_what_is_new">This release adds sound effects in order to provide a better experience and feedback to the player, especially when using a touch screen.\n</string>
     <string name="message_welcome_ending">If you have any issues with the game\'s operation or suggestions for improvements please do not hesitate to contact me (David Read, David.Read@monead.com).  Contact information also found using the \'About\' menu.\n\nInstructions may be viewed at any time by bringing up the game\'s menu and selecting the \'How to Play\' option.\n\nWould you like to begin playing or read the instructions?\n\n</string>
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nThe source code is located at: https://github.com/DaveRead/SequenceHunt\n\nThis program is free software released under the GNU Affero General Public License.  See the License menu option for the full license.</string> 
     <string name="message_undefined">undefined</string>
@@ -39,6 +40,8 @@
     <string name="key_yellow">Y</string>
     <string name="radiobutton_easy">Easy</string>
     <string name="radiobutton_hard">Hard</string>
+    <string name="radiobutton_sound_on">On</string>
+    <string name="radiobutton_sound_off">Off</string>
     <string name="menu_how_to_play">How to Play</string>
     <string name="menu_setup">Configure</string>
     <string name="menu_new_game">New Game</string>

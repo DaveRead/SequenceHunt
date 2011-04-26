@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.monead.games.android.sequence.R;
+import com.monead.games.android.sequence.sound.SoundManager;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -171,6 +172,21 @@ public class SequenceHuntGameModel implements Serializable {
 	 * Flags that the latest try is correct and the user has won.
 	 */
 	private boolean winner;
+	
+	/**
+	 * The relative "score" of the previous try.  
+	 * see: latestTryScore
+	 */
+	private int previousTryScore;
+	
+	/**
+	 * The relative "score" of the latest try.  
+	 * This is used to determine
+	 * if the latest try is better, worse or the same.
+	 * The score is essentially the number correct * 10 + 
+	 * number incorrect position
+	 */
+	private int latestTryScore;
 
 	/**
 	 * The current try number
@@ -237,6 +253,8 @@ public class SequenceHuntGameModel implements Serializable {
 		currentPosit = 0;
 		gameStarted = false;
 		elapsedMS = 0;
+		latestTryScore = 0;
+		previousTryScore = 0;
 	}
 
 	/**
@@ -298,6 +316,18 @@ public class SequenceHuntGameModel implements Serializable {
 	 */
 	public int getMaxTrys() {
 		return MAX_TRYS_ALLOWED;
+	}
+	
+	/**
+	 * Retrieve the relative improvement of the latest try
+	 * from the previous one.  A positive value indicates
+	 * that the latest try had more correct than the prior
+	 * one.
+	 * 
+	 * @return Greater than 1 indicates an improvement, 0 for no change, less than 1 indicates a decline
+	 */
+	public int getTryProgress() {
+		return latestTryScore - previousTryScore;
 	}
 
 	/**
@@ -398,6 +428,7 @@ public class SequenceHuntGameModel implements Serializable {
 		if (currentTry < MAX_TRYS_ALLOWED && currentPosit < getSequenceLength()) {
 			guess[currentTry][currentPosit] = color;
 			++currentPosit;
+			SoundManager.getInstance().play(R.raw.entry);
 			return true;
 		} else {
 			return false;
@@ -413,7 +444,10 @@ public class SequenceHuntGameModel implements Serializable {
 		if (currentTry < MAX_TRYS_ALLOWED && currentPosit > 0) {
 			--currentPosit;
 			guess[currentTry][currentPosit] = UNSELECTED;
+			SoundManager.getInstance().play(R.raw.backout);
 			return true;
+		} else {
+			SoundManager.getInstance().play(R.raw.fewercorrect);
 		}
 
 		return false;
@@ -430,7 +464,13 @@ public class SequenceHuntGameModel implements Serializable {
 			calcClues();
 			++currentTry;
 			currentPosit = 0;
+			SoundManager.getInstance().play(R.raw.guess);
+			if (getTryProgress() < 0) {
+				SoundManager.getInstance().play(R.raw.fewercorrect);
+			}
 			return true;
+		} else {
+			SoundManager.getInstance().play(R.raw.fewercorrect);
 		}
 
 		return false;
@@ -446,6 +486,11 @@ public class SequenceHuntGameModel implements Serializable {
 
 		clueNum = 0;
 		tempGuess = new int[getSequenceLength()];
+		
+		// Tracking whether this try is better (more accurate) 
+		// than the last
+		previousTryScore = latestTryScore;
+		latestTryScore = 0;
 
 		for (int copyGuess = 0; copyGuess < getSequenceLength(); ++copyGuess) {
 			tempGuess[copyGuess] = guess[currentTry][copyGuess];
@@ -455,8 +500,8 @@ public class SequenceHuntGameModel implements Serializable {
 			if (tempGuess[check] == answer[check]) {
 				clue[currentTry][clueNum][CLUE_METADATA_TYPE] = CLUE_POSIT_CORRECT;
 				clue[currentTry][clueNum++][CLUE_METADATA_COLOR] = answer[check];
-
 				tempGuess[check] = UNSELECTED;
+				latestTryScore += 10;
 			}
 		}
 
@@ -479,6 +524,7 @@ public class SequenceHuntGameModel implements Serializable {
 							clue[currentTry][clueNum][CLUE_METADATA_TYPE] = CLUE_POSIT_INCORRECT;
 							clue[currentTry][clueNum++][CLUE_METADATA_COLOR] = answer[check];
 							tempGuess[findMatch] = UNSELECTED;
+							latestTryScore++;
 							break;
 						}
 					}

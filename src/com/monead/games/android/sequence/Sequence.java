@@ -11,6 +11,7 @@ import com.monead.games.android.sequence.reporting.GameStatisticsEngine;
 import com.monead.games.android.sequence.ui.SequenceGameBoard;
 import com.monead.games.android.sequence.util.Formatter;
 import com.monead.games.android.sequence.util.KeyCodeConverter;
+import com.monead.games.android.sequence.sound.SoundManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -98,6 +99,11 @@ public class Sequence extends Activity implements OnTouchListener {
 	private static final String PREF_USE_SAVED_MODEL = "UseSavedModel";
 
 	/**
+	 * Key for persisting whether game sounds are enabled
+	 */
+	private static final String PREF_SOUND_ENABLED = "SoundEnabled";
+	
+	/**
 	 * Key for persisting whether this is the first use of this application
 	 */
 	private static final String PREF_FIRST_USE = "FirstUseFlagValue";
@@ -107,7 +113,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * necessitates having the first use screen appear again to upgrade users
 	 * then this value should be changed.
 	 */
-	private final static String FIRST_USE_FLAG_VALUE = "B";
+	private final static String FIRST_USE_FLAG_VALUE = "C";
 
 	// Constants for the dialogs
 	private static final int DIALOG_WIN = 1;
@@ -116,6 +122,15 @@ public class Sequence extends Activity implements OnTouchListener {
 	private static final int DIALOG_INFO = 4;
 	private static final int DIALOG_ABOUT = 5;
 
+	// Constants for sounds
+	//private static final int SOUND_NEW_GAME = 0;
+	//private static final int SOUND_ENTER_COLOR = 1;
+	//private static final int SOUND_BACKOUT_COLOR = 2;
+	//private static final int SOUND_ENTER_TRY = 3;
+	//private static final int SOUND_FEWER_CORRECT = 4;
+	//private static final int SOUND_WIN = 5;
+	//private static final int SOUND_LOSE = 6;
+	
 	/**
 	 * The game board view
 	 */
@@ -130,7 +145,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Track whether the gameboard is in control
 	 */
 	private boolean gameBoardIsDisplayed;
-
+	
 	/**
 	 * Program name retrieved from manifest
 	 */
@@ -145,7 +160,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * Class name used for logging
 	 */
 	private String className = this.getClass().getName();
-
+	
 	/**
 	 * Life cycle method - called when program is first loaded
 	 * 
@@ -157,7 +172,7 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		loadGameStatistics();
 		gameBoard = new SequenceGameBoard(this, gameStatistics,
-				getSharedPreferences(PREFERENCES_FILE_NAME, 0).getInt(
+				getSharedPreferences(PREFERENCES_FILE_NAME, MODE_PRIVATE).getInt(
 						PREF_SEQUENCE_LENGTH,
 						SequenceHuntGameModel.DEFAULT_SEQUENCE_LENGTH));
 		loadModel();
@@ -240,7 +255,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 */
 	private void setup() {
 		SharedPreferences settings = getSharedPreferences(
-				PREFERENCES_FILE_NAME, 0);
+				PREFERENCES_FILE_NAME, MODE_PRIVATE);
 
 		try {
 			PackageInfo pi = getPackageManager().getPackageInfo(
@@ -266,8 +281,27 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		gameBoard.setDifficultyToHard(settings
 				.getBoolean(PREF_MODE_HARD, false));
+		
+		SoundManager.getInstance().setSoundEnabled(settings.getBoolean(PREF_SOUND_ENABLED, true));
+		
+		setupSounds();
 	}
+	
+	/**
+	 * Setup the sound effects used in the game
+	 */
+	private void setupSounds() {	
+		SoundManager.getInstance().setContext(this);
 
+		SoundManager.getInstance().addSound(R.raw.backout);
+		SoundManager.getInstance().addSound(R.raw.guess);
+		SoundManager.getInstance().addSound(R.raw.entry);
+		SoundManager.getInstance().addSound(R.raw.fewercorrect);
+		SoundManager.getInstance().addSound(R.raw.lose);
+		SoundManager.getInstance().addSound(R.raw.newgame);
+		SoundManager.getInstance().addSound(R.raw.win);
+	}
+	
 	/**
 	 * Switch the game play difficulty level
 	 * 
@@ -283,7 +317,27 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		gameBoard.setDifficultyToHard(difficultyHard);
 	}
+	
+	/**
+	 * Set the sound configuration
+	 * 
+	 * @param enabled Whether sounds should be played
+	 */
+	private void setSound(boolean enabled) {
+		SharedPreferences settings = getSharedPreferences(
+				PREFERENCES_FILE_NAME, MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PREF_SOUND_ENABLED, enabled);
+		editor.commit();
 
+		SoundManager.getInstance().setSoundEnabled(enabled);
+	}
+
+	/**
+	 * Set the length for the sequence
+	 * 
+	 * @param sequenceLength The sequence length
+	 */
 	private void setSequenceLength(int sequenceLength) {
 		SharedPreferences settings = getSharedPreferences(
 				PREFERENCES_FILE_NAME, MODE_PRIVATE);
@@ -335,6 +389,8 @@ public class Sequence extends Activity implements OnTouchListener {
 
 		RadioButton easy = (RadioButton) findViewById(R.id.radio_easy);
 		RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
+		RadioButton rbSoundOn = (RadioButton) findViewById(R.id.sound_on);
+		RadioButton rbSoundOff = (RadioButton) findViewById(R.id.sound_off);
 		((Button) findViewById(R.id.button_save))
 				.setOnClickListener(setupSaveClick);
 		((Button) findViewById(R.id.button_cancel))
@@ -361,6 +417,12 @@ public class Sequence extends Activity implements OnTouchListener {
 			easy.setChecked(true);
 		}
 
+		if (SoundManager.getInstance().isSoundEnabled()) {
+			rbSoundOn.setChecked(true);
+		} else {
+			rbSoundOff.setChecked(true);
+		}
+		
 		spinnerSequenceLength.setSelection(selectedLengthPosition);
 	}
 
@@ -490,7 +552,7 @@ public class Sequence extends Activity implements OnTouchListener {
 		ObjectInputStream in = null;
 
 		SharedPreferences settings = getSharedPreferences(
-				PREFERENCES_FILE_NAME, 0);
+				PREFERENCES_FILE_NAME, MODE_PRIVATE);
 
 		if (settings.getBoolean(PREF_USE_SAVED_MODEL, false)) {
 			try {
@@ -652,6 +714,7 @@ public class Sequence extends Activity implements OnTouchListener {
 		}
 
 		gameBoard.newGame();
+		SoundManager.getInstance().play(R.raw.newgame);
 	}
 
 	/**
@@ -831,7 +894,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	 * of the dialog
 	 * 
 	 * This call is included to backward compatibility. The method is
-	 * deprecated, but for pre-API Level 8 (e.g. pre Android 2.1) installs it is
+	 * deprecated, but for pre-API Level 8 (e.g. pre Android 2.2) installs it is
 	 * this method that will be called.
 	 * 
 	 * The method simply calls the replacement version, passing null for the new
@@ -852,6 +915,8 @@ public class Sequence extends Activity implements OnTouchListener {
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
 		switch (id) {
 			case DIALOG_WIN:
+				SoundManager.getInstance().play(R.raw.win);
+				
 				((AlertDialog) dialog).setMessage(getResources().getString(
 						R.string.message_win)
 						+ "\n\n"
@@ -865,6 +930,7 @@ public class Sequence extends Activity implements OnTouchListener {
 								.getString(R.string.question_play_again));
 				break;
 			case DIALOG_LOSE:
+				SoundManager.getInstance().play(R.raw.lose);
 				((AlertDialog) dialog).setMessage(getResources().getString(
 						R.string.message_lose)
 						+ "\n"
@@ -1063,6 +1129,8 @@ public class Sequence extends Activity implements OnTouchListener {
 					gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
 							gameBoard.getModel());
 					showDialog(DIALOG_LOSE);
+				//} else if (gameBoard.getModel().getTryProgress() < 0) {
+					//SoundManager.getInstance().play(R.raw.fewercorrect);
 				}
 			}
 			return true;
@@ -1086,6 +1154,8 @@ public class Sequence extends Activity implements OnTouchListener {
 				gameStatistics.addGame(gameBoard.isDifficultySetToHard(),
 						gameBoard.getModel());
 				showDialog(DIALOG_LOSE);
+			//} else if (gameBoard.getModel().getTryProgress() < 0) {
+				//SoundManager.getInstance().play(R.raw.fewercorrect);
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_DEL) {
 			gameBoard.notifyDeleteChoice();
@@ -1134,6 +1204,7 @@ public class Sequence extends Activity implements OnTouchListener {
 	private OnClickListener setupSaveClick = new OnClickListener() {
 		public void onClick(View v) {
 			RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
+			RadioButton rbSoundOn = (RadioButton) findViewById(R.id.sound_on);
 			Spinner spinnerSequenceLength = (Spinner) findViewById(R.id.spinner_sequence_length);
 			try {
 				setSequenceLength(Integer.parseInt(spinnerSequenceLength
@@ -1145,6 +1216,7 @@ public class Sequence extends Activity implements OnTouchListener {
 						throwable);
 			}
 			setDifficultyToHard(hard.isChecked());
+			setSound(rbSoundOn.isChecked());
 
 			displayGameboard();
 			// setContentView(gameBoard);

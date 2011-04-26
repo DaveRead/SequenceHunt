@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.monead.games.android.sequence"
-      android:versionName="01.06.06" android:versionCode="17">
+      android:versionName="01.07.00" android:versionCode="18">
       
     <application android:icon="@drawable/ic_launcher_sequence" 
     		android:label="@string/title_app_name">

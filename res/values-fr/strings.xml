@@ -7,8 +7,9 @@
     <string name="title_history">Histoire</string>
     <string name="title_license">Licence</string>
     <string name="title_setup">Niveau de difficulté</string>
+    <string name="title_sound_setup">Sons</string>
     <string name="message_welcome_initial">\nMerci d\'avoir installé des Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Cette version améliore les statistiques de jeu d\'enregistrement et de déclaration.\n</string>
+    <string name="message_welcome_what_is_new">Cette version ajoute des effets sonores en vue de fournir une meilleure expérience et les informations au joueur, en particulier lorsqu\'on utilise un écran tactile.\n</string>
     <string name="message_welcome_ending">Si vous avez des problèmes avec le fonctionnement du jeu ou des suggestions pour des améliorations s\'il vous plaît n\'hésitez pas à me contacter (David Read, David.Read@monead.com). Informations de contact a également trouvés en utilisant le «A propos» du menu.\n\nLes instructions peuvent être consultés à tout moment en mettant le menu du jeu et de sélectionner le \'comment jouer\' option.\n\nSouhaitez-vous commencer à jouer ou de lire les instructions?\n\n</string> 
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nLe code source est situé au: https://github.com/DaveRead/SequenceHunt\n\nCe programme est un logiciel libre distribué sous la GNU Affero General Public License. Voir l\'option de menu de licence pour une licence complète.</string> 
     <string name="message_undefined">indéfini</string>
@@ -39,6 +40,8 @@
     <string name="color_unknown">Inconnue</string>
     <string name="radiobutton_easy">Facile</string>
     <string name="radiobutton_hard">Difficile</string>
+    <string name="radiobutton_sound_on">Activé</string>
+    <string name="radiobutton_sound_off">Désactivé</string>
     <string name="menu_how_to_play">Comment jouer</string>
     <string name="menu_setup">Configurer</string>
     <string name="menu_new_game">Nouveau Jeu</string>
