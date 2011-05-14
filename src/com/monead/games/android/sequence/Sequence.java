@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.util.Log;
@@ -178,7 +179,8 @@ public class Sequence extends Activity implements OnTouchListener {
 		loadModel();
 		setup();
 		gameBoard.setOnTouchListener(this);
-
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
 		if (firstUse()) {
 			Log.d(className, "Need to display first use screen");
 			setupForFirstUse();
