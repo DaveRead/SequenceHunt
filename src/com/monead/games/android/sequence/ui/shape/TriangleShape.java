@@ -26,23 +26,23 @@ import android.graphics.drawable.shapes.Shape;
  */
 
 /**
- * Draw an isosceles triangle of maximum dimensions on its canvas
+ * Draw an isosceles triangle of maximum dimensions on its canvas.
  * 
  * @author David Read
- *
+ * 
  */
 public class TriangleShape extends Shape {
 
-	@Override
-	public void draw(Canvas canvas, Paint paint) {
-		Path path;
-		
-		path = new Path();
-		path.moveTo(0, getHeight());
-		path.lineTo(getWidth(), getHeight());
-		path.lineTo(getWidth()/2, 0);
-		path.lineTo(0, getHeight());
-		canvas.drawPath(path, paint);
-	}
+    @Override
+    public final void draw(final Canvas canvas, final Paint paint) {
+        Path path;
+
+        path = new Path();
+        path.moveTo(0, getHeight());
+        path.lineTo(getWidth(), getHeight());
+        path.lineTo(getWidth() / 2, 0);
+        path.lineTo(0, getHeight());
+        canvas.drawPath(path, paint);
+    }
 
 }

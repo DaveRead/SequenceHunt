@@ -22,13 +22,26 @@ package com.monead.games.android.sequence.event;
 
 /**
  * A simple interface to support listening for user actions
- * related to playing the Sequence Hunt game
+ * related to playing the Sequence Hunt game.
  * 
  * @author David Read
  *
  */
 public interface ColorChoiceListener {
-	public void notifyColorChoice(int color);
-	public void notifyDeleteChoice();
-	public void notifyTry();
+    /**
+     * Detect a color selection.
+     * 
+     * @param color  The selected color
+     */
+    void notifyColorChoice(int color);
+    
+    /**
+     * Detect a deletion request.
+     */
+    void notifyDeleteChoice();
+    
+    /**
+     * Detect a try submission request.
+     */
+    void notifyTry();
 }

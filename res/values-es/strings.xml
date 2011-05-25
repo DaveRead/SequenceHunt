@@ -9,7 +9,7 @@
     <string name="title_setup">Nivel de Dificultad</string>
     <string name="title_sound_setup">Sonido</string>
     <string name="message_welcome_initial">\nGracias por instalar la Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Esta versión incluye efectos de sonido con el fin de proporcionar una mejor experiencia y retroalimentación para el jugador, especialmente cuando se utiliza una pantalla táctil.\n</string>
+    <string name="message_welcome_what_is_new">Esta versión no contiene cambios funcionales. Es el resultado de un esfuerzo de código de limpieza concentrado.\n</string>
     <string name="message_welcome_ending">Si usted tiene algún problema con el funcionamiento del juego o sugerencias de mejora por favor no dude en ponerse en contacto conmigo (David Read, David.Read@monead.com). La información de contacto también se encuentra con el \'Acerca de\' menú.\n\nLas instrucciones pueden ser vistos en cualquier momento mediante la educación de menú del juego y seleccionar el \'Cómo jugar\' opción.\n\n¿Le gustaría comenzar a jugar o leer las instrucciones?\n\n</string> 
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nEl código fuente se encuentra en: https://github.com/DaveRead/SequenceHunt\n\nEste programa es software libre publicado bajo la licencia GNU Affero General Public License. Vea la opción de menú de Licencia para la licencia completa.</string> 
     <string name="message_undefined">sin definir</string>

@@ -26,24 +26,24 @@ import android.graphics.drawable.shapes.Shape;
  */
 
 /**
- * Draw a diamond of maximum dimensions on its canvas
+ * Draw a diamond of maximum dimensions on its canvas.
  * 
  * @author David Read
- *
+ * 
  */
 public class DiamondShape extends Shape {
 
-	@Override
-	public void draw(Canvas canvas, Paint paint) {
-		Path path;
-		
-		path = new Path();
-		path.moveTo(getWidth()/2, 0);
-		path.lineTo(0, getHeight()/2);
-		path.lineTo(getWidth()/2, getHeight());
-		path.lineTo(getWidth(), getHeight()/2);
-		path.lineTo(getWidth()/2, 0);
-		canvas.drawPath(path, paint);
-	}
+    @Override
+    public final void draw(final Canvas canvas, final Paint paint) {
+        Path path;
+
+        path = new Path();
+        path.moveTo(getWidth() / 2, 0);
+        path.lineTo(0, getHeight() / 2);
+        path.lineTo(getWidth() / 2, getHeight());
+        path.lineTo(getWidth(), getHeight() / 2);
+        path.lineTo(getWidth() / 2, 0);
+        canvas.drawPath(path, paint);
+    }
 
 }

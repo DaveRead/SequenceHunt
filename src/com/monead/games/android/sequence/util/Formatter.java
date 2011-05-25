@@ -6,35 +6,64 @@ import java.util.TimeZone;
 
 import android.util.Log;
 
-public class Formatter {
-	private static Formatter formatter;
+/**
+ * Provide formatting services.
+ * 
+ * @author David Read
+ * 
+ */
+public final class Formatter {
+    /**
+     * Singleton instance.
+     */
+    private static Formatter formatter;
 
-	/**
-	 * Class name used for logging
-	 */
-	private String className = this.getClass().getName();
+    /**
+     * Class name used for logging.
+     */
+    private String className = this.getClass().getName();
 
-	SimpleDateFormat timerFormat;
-	
-	private Formatter() {
-		timerFormat = new SimpleDateFormat("HH:mm:ss");
-		timerFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	}
-	
-	public static final synchronized Formatter getInstance() {
-		if (formatter == null) {
-			formatter = new Formatter();
-		}
-		return formatter;
-	}
-	
-	public String formatTimer(long milliseconds) {
-		Date tempDate;
-		
-		tempDate = new Date(milliseconds);
+    /**
+     * A formatter for time.
+     */
+    private SimpleDateFormat timerFormat;
 
-		Log.d(className, "milliseconds [" + milliseconds + "] tempDate [" + tempDate + "] result[" + timerFormat.format(tempDate) + "]");
-		
-		return timerFormat.format(tempDate);
-	}
+    /**
+     * Create a formatter - private since Singleton.
+     */
+    private Formatter() {
+        timerFormat = new SimpleDateFormat("HH:mm:ss");
+        timerFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
+    /**
+     * Get an instance of the formatter.
+     * 
+     * @return The formatter instance
+     */
+    public static synchronized Formatter getInstance() {
+        if (formatter == null) {
+            formatter = new Formatter();
+        }
+        return formatter;
+    }
+
+    /**
+     * Obtain MS in hour:minute:second format.
+     * 
+     * @param milliseconds
+     *            The number of milliseconds
+     * 
+     * @return The converted value
+     */
+    public String formatTimer(final long milliseconds) {
+        Date tempDate;
+
+        tempDate = new Date(milliseconds);
+
+        Log.d(className, "milliseconds [" + milliseconds + "] tempDate ["
+                + tempDate + "] result[" + timerFormat.format(tempDate) + "]");
+
+        return timerFormat.format(tempDate);
+    }
 }

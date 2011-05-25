@@ -29,168 +29,228 @@ import com.monead.games.android.sequence.model.SequenceHuntGameModel;
  */
 
 /**
- * Collect and house game statistics
+ * Collect and house game statistics.
  */
 public class GameStatisticsEngine implements Serializable {
-	private static final long serialVersionUID = 2350057697130863738L;
+    /**
+     * Serial Id required since this model is serializable.
+     */
+    private static final long serialVersionUID = 2350057697130863738L;
 
-	/**
-	 * Maximum number of historical games for which to hold statistics
-	 */
-	private final static int MAX_GAMES_TO_STORE = 300;
+    /**
+     * Maximum number of historical games for which to hold statistics.
+     */
+    private static final int MAX_GAMES_TO_STORE = 300;
 
-	/**
-	 * Class name used for logging
-	 */
-	private String className = this.getClass().getName();
-	
-	private final static int INDEX_GAME_COUNT = 0;
-	private final static int INDEX_MODE_HARD = 1;
-	private final static int INDEX_NUM_TRIES = 2;
-	private final static int INDEX_GAME_TIME_MS = 3;
-	private final static int INDEX_COLORS_START = 4;
+    /**
+     * Class name used for logging.
+     */
+    private String className = this.getClass().getName();
 
-	/**
-	 * The total number of games played
-	 */
-	private long gameCount;
+    /**
+     * CSV field containing game count value.
+     */
+    @SuppressWarnings("unused")
+    private static final int INDEX_GAME_COUNT = 0;
 
-	/**
-	 * The historical information for each game
-	 */
-	private List<String> gameHistory;
+    /**
+     * CSV field containing game hard indicator.
+     */
+    private static final int INDEX_MODE_HARD = 1;
 
-	private boolean statsAccurate;
+    /**
+     * CSV field containing game try count.
+     */
+    private static final int INDEX_NUM_TRIES = 2;
 
-	private GameStatistics statistics;
+    /**
+     * CSV field containing game time in MS.
+     */
+    private static final int INDEX_GAME_TIME_MS = 3;
 
-	/**
-	 * Setup the game history array
-	 */
-	public GameStatisticsEngine() {
-		gameHistory = new ArrayList<String>();
-	}
+    /**
+     * CSV field containing first color in sequence.
+     */
+    private static final int INDEX_COLORS_START = 4;
 
-	/**
-	 * Add a game to history
-	 * 
-	 * @param model
-	 *            The model for the game being added
-	 */
-	public void addGame(boolean modeHard, SequenceHuntGameModel model) {
-		addGame(model, modeHard, model.isWinner() ? "Win" : model.isLoser() ? "Lose"
-				: "Unknown");
-	}
+    /**
+     * The total number of games played.
+     */
+    private long gameCount;
 
-	/**
-	 * Add a game to history, adding a message
-	 * 
-	 * This method will assure that the MAX_GAMES_TO_STORE limit is enforced.
-	 * 
-	 * @param model
-	 *            The model for the game being added
-	 */
-	public void addGame(SequenceHuntGameModel model, boolean modeHard, String message) {
-		while (gameHistory.size() >= MAX_GAMES_TO_STORE) {
-			gameHistory.remove(0);
-		}
-		gameCount++;
-		gameHistory.add(gameCount 
-				+ ",'" + modeHard + "'"
-				+ "," + model.getCurrentTry() 
-				+ "," + model.getElapsedTime() 
-				+ "," + model.getAnswerValue() 
-				+ ",'" + message + "'");
-		setStatsAccurate(false);
-		Log.d(className, "Added game: " + gameCount + " gameHistory count=" + gameHistory.size());
-	}
-	
-	private void setStatsAccurate(boolean accurate) {
-		statsAccurate = accurate;
-	}
-	
-	private boolean isStatsAccurate() {
-		return statsAccurate;
-	}
+    /**
+     * The historical information for each game.
+     */
+    private List<String> gameHistory;
 
-	public GameStatistics getGameStatistics() {
-		if (!isStatsAccurate()) {
-			calcStats();
-		}
+    /**
+     * Whether the calculated statistics are accurate e.g. up to date
+     */
+    private boolean statsAccurate;
 
-		return statistics;
-	}
+    /**
+     * The latest calculated statistics.
+     */
+    private GameStatistics statistics;
 
-	private void calcStats() {
-		String[] parsed;
-		int numFields;
-		String outcome;
-		String modeHard;
+    /**
+     * Setup the game history array.
+     */
+    public GameStatisticsEngine() {
+        gameHistory = new ArrayList<String>();
+    }
 
-		Log.d(className, "Calculate statistics with gameHistory length=" + gameHistory.size());
-		
-		statistics = new GameStatistics();
+    /**
+     * Add a game to history.
+     * 
+     * @param model
+     *            The model for the game being added
+     * @param modeHard
+     *            True if in hard mode
+     */
+    public final void addGame(final SequenceHuntGameModel model,
+            final boolean modeHard) {
+        addGame(model, modeHard, model.isWinner() ? "Win"
+                : model.isLoser() ? "Lose" : "Unknown");
+    }
 
-		try {
-			for (String record : gameHistory) {
-				Log.d(className, "gameHistory record [" + record + "]");
-				
-				// New format ends with a string indicating game result
-				if (record.endsWith("'")) {
-					parsed = record.split(",");
-					numFields = parsed.length;
-					Log.d(className, "Record was in new format field count=" + numFields);
-					outcome = parsed[numFields - 1].replaceAll("'", "");
-					modeHard = parsed[INDEX_MODE_HARD].replaceAll("'", "");
-					
-					if (outcome.equalsIgnoreCase("win")) {
-						statistics.addWin();
-						statistics.addWinTimeMS(Long.parseLong(parsed[INDEX_GAME_TIME_MS]));
-					} else if (outcome.equalsIgnoreCase("lose")) {
-						statistics.addLoss();
-						statistics.addLostTimeMS(Long.parseLong(parsed[INDEX_GAME_TIME_MS]));
-					} else {
-						statistics.addQuit();
-					}
+    /**
+     * Add a game to history, adding a message
+     * 
+     * This method will assure that the MAX_GAMES_TO_STORE limit is enforced.
+     * 
+     * @param model
+     *            The model for the game being added
+     * @param modeHard
+     *            True if in hard mode
+     * @param message
+     *            The message to include with the game record
+     */
+    public final void addGame(final SequenceHuntGameModel model,
+            final boolean modeHard, final String message) {
+        while (gameHistory.size() >= MAX_GAMES_TO_STORE) {
+            gameHistory.remove(0);
+        }
+        gameCount++;
+        gameHistory.add(gameCount + ",'" + modeHard + "'" + ","
+                + model.getCurrentTry() + "," + model.getElapsedTime() + ","
+                + model.getAnswerValue() + ",'" + message + "'");
+        setStatsAccurate(false);
+        Log.d(className, "Added game: " + gameCount + " gameHistory count="
+                + gameHistory.size());
+    }
 
-					if (modeHard.equalsIgnoreCase("false")) {
-						statistics.addEasy();
-					} else {
-						statistics.addHard();
-					}
-					
-					statistics.addTries(Long.parseLong(parsed[INDEX_NUM_TRIES]));
-	
-					for (int index = INDEX_COLORS_START;index < parsed.length - 1;++index) {
-						statistics.addColor(Integer.parseInt(parsed[index]));
-					}
-				}
-			}
+    /**
+     * Set whether the statistics are accurate (up to date).
+     * 
+     * @param accurate
+     *            Whether the statistics are up to date
+     */
+    private void setStatsAccurate(final boolean accurate) {
+        statsAccurate = accurate;
+    }
 
-		}
-		catch (Throwable throwable) {
-			statistics.setStatsError(throwable.getClass().getName() + ": "
-					+ throwable.getMessage());
-		}
+    /**
+     * Get whether the statistics are accurate e.g. up to date
+     * 
+     * @return Accuracy of statistics - true indicates they are up to date
+     */
+    private boolean isStatsAccurate() {
+        return statsAccurate;
+    }
 
-		statsAccurate = true;
-	}
+    /**
+     * Calculate the statistics based on the current data.
+     * 
+     * @return The game statistics
+     */
+    public final GameStatistics getGameStatistics() {
+        if (!isStatsAccurate()) {
+            calcStats();
+        }
 
-	/**
-	 * Create a CSV report of each game's history New lines separate each game
-	 * 
-	 * @return The CSV report
-	 */
-	public String reportHistoryCSV() {
-		StringBuffer history;
+        return statistics;
+    }
 
-		history = new StringBuffer();
+    /**
+     * Calculate the statistics for game play.
+     */
+    private void calcStats() {
+        String[] parsed;
+        int numFields;
+        String outcome;
+        String modeHard;
 
-		for (String value : gameHistory) {
-			history.append(value);
-			history.append('\n');
-		}
+        Log.d(className, "Calculate statistics with gameHistory length="
+                + gameHistory.size());
 
-		return history.toString();
-	}
+        statistics = new GameStatistics();
+
+        try {
+            for (String record : gameHistory) {
+                Log.d(className, "gameHistory record [" + record + "]");
+
+                // New format ends with a string indicating game result
+                if (record.endsWith("'")) {
+                    parsed = record.split(",");
+                    numFields = parsed.length;
+                    Log.d(className, "Record was in new format field count="
+                            + numFields);
+                    outcome = parsed[numFields - 1].replaceAll("'", "");
+                    modeHard = parsed[INDEX_MODE_HARD].replaceAll("'", "");
+
+                    if (outcome.equalsIgnoreCase("win")) {
+                        statistics.addWin();
+                        statistics.addWinTimeMS(Long
+                                .parseLong(parsed[INDEX_GAME_TIME_MS]));
+                    } else if (outcome.equalsIgnoreCase("lose")) {
+                        statistics.addLoss();
+                        statistics.addLostTimeMS(Long
+                                .parseLong(parsed[INDEX_GAME_TIME_MS]));
+                    } else {
+                        statistics.addQuit();
+                    }
+
+                    if (modeHard.equalsIgnoreCase("false")) {
+                        statistics.addEasy();
+                    } else {
+                        statistics.addHard();
+                    }
+
+                    statistics
+                            .addTries(Long.parseLong(parsed[INDEX_NUM_TRIES]));
+
+                    for (int index = INDEX_COLORS_START; index 
+                            < parsed.length - 1; ++index) {
+                        statistics.addColor(Integer.parseInt(parsed[index]));
+                    }
+                }
+            }
+
+        }
+        catch (Throwable throwable) {
+            statistics.setStatsError(throwable.getClass().getName() + ": "
+                    + throwable.getMessage());
+        }
+
+        statsAccurate = true;
+    }
+
+    /**
+     * Create a CSV report of each game's history New lines separate each game.
+     * 
+     * @return The CSV report
+     */
+    public final String reportHistoryCSV() {
+        StringBuffer history;
+
+        history = new StringBuffer();
+
+        for (String value : gameHistory) {
+            history.append(value);
+            history.append('\n');
+        }
+
+        return history.toString();
+    }
 }
