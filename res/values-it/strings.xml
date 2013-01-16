@@ -9,7 +9,7 @@
     <string name="title_setup">Livello di difficoltà</string>
     <string name="title_sound_setup">Suoni</string>
     <string name="message_welcome_initial">\nGrazie per aver installato Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Questa versione non contiene cambiamenti funzionali. E \'il risultato di uno sforzo concentrato pulizia del codice.\n</string>
+    <string name="message_welcome_what_is_new">A causa di una mancanza di supporto per ancoraggi locali negli URL delle componenti WebView di Android 4+, i collegamenti alle pagine di aiuto non saltare alla posizione corretta per le informazioni in una pagina. L\'utente è costretto a scorrere fino alla posizione di riferimento. Mi scuso per l\'inconveniente e speriamo che il problema con il componente WebView in Android sarà risolto al più presto.\n</string>
     <string name="message_welcome_ending">Se avete problemi con il funzionamento del gioco o suggerimenti per il miglioramento non esitate a contattarmi (David Read, David.Read@monead.com). Le informazioni di contatto anche trovato usando il \'Informazioni su\' di menu.\n\nLe istruzioni possono essere visualizzate in qualsiasi momento portando il menu del gioco e selezionando l\'opzione \'Come si Gioca\'.\n\nVolete iniziare a giocare o leggere le istruzioni?\n\n</string>
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nIl codice sorgente si trova a: https://github.com/DaveRead/SequenceHunt\n\nQuesto programma è software libero rilasciato sotto la GNU Affero General Public License. Vedere l\'opzione di menu di licenza per la licenza completa.</string> 
     <string name="message_undefined">indefinito</string>
