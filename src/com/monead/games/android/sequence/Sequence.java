@@ -76,16 +76,16 @@ public class Sequence extends Activity implements OnTouchListener {
   /**
    * True if this is being built for the Korean market (UbiNuri).
    * 
-   * Remember to change the launcher icon in the manifest for
-   * the Korean version as well.
+   * Remember to change the launcher icon in the manifest for the Korean version
+   * as well.
    */
   private static final boolean KOREAN_VERSION = false;
 
   /**
    * Simple Dialog used to show the splash screen.
    */
-  private Dialog splashDialog;  
-  
+  private Dialog splashDialog;
+
   /**
    * Length of time to display the splash screen.
    */
@@ -111,7 +111,7 @@ public class Sequence extends Activity implements OnTouchListener {
    * File used to save game history.
    */
   private static final String SERIALIZED_GAME_STATISTICS_FILE_NAME 
-      = "Sequence_Game_Statistics.txt";
+    = "Sequence_Game_Statistics.txt";
 
   /**
    * Key for persisting the difficulty level choice.
@@ -262,38 +262,46 @@ public class Sequence extends Activity implements OnTouchListener {
    * Shows the splash screen over the full Activity.
    */
   protected final void showKoreanSplashScreen() {
-      splashDialog = new Dialog(this);
-      splashDialog.setContentView(R.layout.korean_certificate);
-      splashDialog.setCancelable(false);
-      splashDialog.show();
-   
-      // Set Runnable to remove splash screen just in case
-      final Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          removeSplashScreen();
-        }
-      }, SPLASH_SCREEN_DELAY_MILLISECONDS);
+    int koreanCertLayoutId = getResources().getIdentifier(
+        "korean_certificate", "layout", getPackageName());
+
+    splashDialog = new Dialog(this);
+    //splashDialog.setContentView(R.layout.korean_certificate);
+    splashDialog.setContentView(koreanCertLayoutId);
+    splashDialog.setCancelable(false);
+    splashDialog.show();
+
+    // Set Runnable to remove splash screen just in case
+    final Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        removeSplashScreen();
+      }
+    }, SPLASH_SCREEN_DELAY_MILLISECONDS);
   }
-  
+
   /**
    * Removes the Dialog that displays the splash screen.
    */
   protected final void removeSplashScreen() {
-      if (splashDialog != null) {
-          splashDialog.dismiss();
-          splashDialog = null;
-      }
-  }  
-  
+    if (splashDialog != null) {
+      splashDialog.dismiss();
+      splashDialog = null;
+    }
+  }
+
   /**
    * Show the splash screen (certificate) for the Korean version.
    */
   private void xshowKoreanSplashScreen() {
-    setContentView(R.layout.korean_certificate);
-    //ImageView certificate = (ImageView) findViewById(R.id.certificate);
-    //certificate.setImageResource(R.drawable.korean_certificate_grb_logo);
+    int koreanCertLayoutId = getResources().getIdentifier(
+        "korean_certificate", "layout", getPackageName());
+
+    setContentView(koreanCertLayoutId);
+    //setContentView(R.layout.korean_certificate);
+    // ImageView certificate = (ImageView) findViewById(R.id.certificate);
+    // certificate.setImageResource(R.drawable.korean_certificate_grb_logo);
 
     long milliseconds = new java.util.Date().getTime()
                 + SPLASH_SCREEN_DELAY_MILLISECONDS;
@@ -530,7 +538,7 @@ public class Sequence extends Activity implements OnTouchListener {
                 findViewById(R.id.spinner_sequence_length);
 
     ArrayAdapter<CharSequence> adapterSequenceLengthOptions 
-        = new ArrayAdapter<CharSequence>(
+      = new ArrayAdapter<CharSequence>(
                 this, android.R.layout.simple_spinner_item);
     adapterSequenceLengthOptions
                 .setDropDownViewResource(
@@ -538,8 +546,8 @@ public class Sequence extends Activity implements OnTouchListener {
     spinnerSequenceLength.setAdapter(adapterSequenceLengthOptions);
 
     selectedLengthPosition = 0;
-    for (int position = 0, length 
-        = SequenceHuntGameModel.MINIMUM_SEQUENCE_LENGTH; 
+    for (int position = 0, 
+        length = SequenceHuntGameModel.MINIMUM_SEQUENCE_LENGTH; 
         length <= SequenceHuntGameModel.MAXIMUM_SEQUENCE_LENGTH; 
         ++length, position++) {
       adapterSequenceLengthOptions.add(length + "");
@@ -674,8 +682,8 @@ public class Sequence extends Activity implements OnTouchListener {
         catch (Throwable throwable) {
           Log.e(
               className, getResources()
-              .getString(
-                  R.string.errormessage_model_output_file_close_failed),
+                  .getString(
+                      R.string.errormessage_model_output_file_close_failed),
                   throwable);
         }
       }
@@ -716,8 +724,8 @@ public class Sequence extends Activity implements OnTouchListener {
           catch (Throwable throwable) {
             Log.e(className,
                 getResources()
-                .getString(
-                    R.string.errormessage_model_input_file_close_failed),
+                    .getString(
+                        R.string.errormessage_model_input_file_close_failed),
                     throwable);
           }
         }
@@ -750,8 +758,8 @@ public class Sequence extends Activity implements OnTouchListener {
         catch (Throwable throwable) {
           Log.e(
               className, getResources()
-              .getString(
-                  R.string.errormessage_stats_output_file_close_failed),
+                  .getString(
+                      R.string.errormessage_stats_output_file_close_failed),
                   throwable);
         }
       }
@@ -1397,7 +1405,7 @@ public class Sequence extends Activity implements OnTouchListener {
     public void onClick(final View v) {
       RadioButton hard = (RadioButton) findViewById(R.id.radio_hard);
       RadioButton rbSoundOn = (RadioButton) findViewById(R.id.sound_on);
-      Spinner spinnerSequenceLength = 
+      Spinner spinnerSequenceLength =
           (Spinner) findViewById(R.id.spinner_sequence_length);
       try {
         setSequenceLength(Integer.parseInt(spinnerSequenceLength
@@ -1444,7 +1452,7 @@ public class Sequence extends Activity implements OnTouchListener {
    */
   private OnClickListener historyClipboardClick = new OnClickListener() {
     public void onClick(final View v) {
-      ClipboardManager clipboard = 
+      ClipboardManager clipboard =
           (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
       clipboard.setText(gameStatistics.reportHistoryCSV());
     }
