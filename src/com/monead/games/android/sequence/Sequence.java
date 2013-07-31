@@ -15,6 +15,7 @@ import com.monead.games.android.sequence.sound.SoundManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -138,13 +139,18 @@ public class Sequence extends Activity implements OnTouchListener {
    * Key for persisting whether this is the first use of this application.
    */
   private static final String PREF_FIRST_USE = "FirstUseFlagValue";
+  
+  /**
+   * Key for persisting the volume set while playing the game.
+   */
+  private static final String PREF_GAME_VOLUME = "GameVolume";
 
   /**
    * A value that is stored as indicating first use If a major version change
    * necessitates having the first use screen appear again to upgrade users then
    * this value should be changed.
    */
-  private static final String FIRST_USE_FLAG_VALUE = "C";
+  private static final String FIRST_USE_FLAG_VALUE = "D";
 
   // Constants for the dialogs
   /**
@@ -195,6 +201,12 @@ public class Sequence extends Activity implements OnTouchListener {
    * Track whether the gameboard is in control.
    */
   private boolean gameBoardIsDisplayed;
+  
+  /**
+   * The media volume value prior to starting the game. The
+   * volume is restored to this value when exiting the game.
+   */
+  private int originalMediaVolume;
 
   /**
    * Program name retrieved from manifest.
@@ -500,6 +512,10 @@ public class Sequence extends Activity implements OnTouchListener {
     setGameBoardNotVisible();
     saveModel();
     saveGameStatistics();
+    saveGameMediaVolume();
+    
+    // Restore the original media volume prior to exiting the game
+    setCurrentMediaVolume(originalMediaVolume);
   }
 
   /**
@@ -512,6 +528,63 @@ public class Sequence extends Activity implements OnTouchListener {
     super.onResume();
 
     loadModel();
+    /* retain the current media volume so that it can be restored 
+     * when exiting the game
+     */
+    originalMediaVolume = getCurrentMediaVolume();
+    
+    restoreGameVolume();
+  }
+    
+  /**
+   * Get the volume for the music stream.
+   * 
+   * @return The current volume
+   */
+  private int getCurrentMediaVolume() {
+    AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    return audio.getStreamVolume(AudioManager.STREAM_MUSIC);    
+  }
+  
+  /**
+   * Set the volume for the music stream.
+   * 
+   * @param volume The volume to set
+   */
+  private void setCurrentMediaVolume(final int volume) {
+    AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+    Log.d(className, "Set media volume to " + volume);
+  }
+  
+  /**
+   * Save the current media volume to the preferences file.
+   */
+  private void saveGameMediaVolume() {
+    SharedPreferences settings = getSharedPreferences(
+        PREFERENCES_FILE_NAME, MODE_PRIVATE);
+    
+    SharedPreferences.Editor editor = settings.edit();
+    editor.putInt(PREF_GAME_VOLUME, getCurrentMediaVolume());
+    editor.commit();
+    Log.d(className, "Saved game media volume: " + getCurrentMediaVolume());
+  }
+  
+  /**
+   * Restore the media volume from the preferences file.
+   */
+  private void restoreGameVolume() {
+    int gameVolume = getSharedPreferences(PREFERENCES_FILE_NAME, MODE_PRIVATE)
+    .getInt(PREF_GAME_VOLUME, -1);
+    
+    if (gameVolume != -1) {
+      setCurrentMediaVolume(gameVolume);
+      Log.d(className, "Restored game media volume to " + gameVolume);
+    } else {
+      Log.d(className, 
+          "No prior game media volume set, leave as current value of " 
+          + getCurrentMediaVolume());
+    }
   }
 
   /**

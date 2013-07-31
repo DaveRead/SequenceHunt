@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.monead.games.android.sequence"
-      android:versionName="01.07.03" android:versionCode="21">
+      android:versionName="01.07.04" android:versionCode="22">
       
     <!-- Standard version -->
      <application android:icon="@drawable/ic_launcher_sequence" 

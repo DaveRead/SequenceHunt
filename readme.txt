@@ -1,6 +1,6 @@
 Sequence Hunt
 
-Copyright 2011, David S. Read
+Copyright (c) 2011-2013, David S. Read
 
 Sequence Hunt is a decoding game for the android platform
 that challenges the player to determine a sequence of 
