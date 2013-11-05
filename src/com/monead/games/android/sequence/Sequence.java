@@ -150,7 +150,7 @@ public class Sequence extends Activity implements OnTouchListener {
    * necessitates having the first use screen appear again to upgrade users then
    * this value should be changed.
    */
-  private static final String FIRST_USE_FLAG_VALUE = "D";
+  private static final String FIRST_USE_FLAG_VALUE = "E";
 
   // Constants for the dialogs
   /**

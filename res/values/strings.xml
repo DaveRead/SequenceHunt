@@ -9,7 +9,7 @@
     <string name="title_setup">Level of Difficulty</string>
     <string name="title_sound_setup">Sound</string>
     <string name="message_welcome_initial">\nThank you for installing Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Added a feature to remember the audio volume selected for the game. If the volume is changed when playing, it will be retained and restored whenever the game is started.  The original music media volume will be restored when exiting the game. That way if the user\'s preference is to have the game volume be different than other sound sources (such as music), he/she won\'t have to keep adjusting the volume when starting and stopping the game.\n</string>
+    <string name="message_welcome_what_is_new">Thank you Nicolas Patzelt for improving the German translations used in the game.\n</string>
     <string name="message_welcome_ending">If you have any issues with the game\'s operation or suggestions for improvements please do not hesitate to contact me (David Read, David.Read@monead.com).  Contact information also found using the \'About\' menu.\n\nInstructions may be viewed at any time by bringing up the game\'s menu and selecting the \'How to Play\' option.\n\nWould you like to begin playing or read the instructions?\n\n</string>
     <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nThe source code is located at: https://github.com/DaveRead/SequenceHunt\n\nThis program is free software released under the GNU Affero General Public License.  See the License menu option for the full license.</string> 
     <string name="message_undefined">undefined</string>

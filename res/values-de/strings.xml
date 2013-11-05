@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- de -->
+<!-- Thank you to Nicolas Patzelt for the improved German translations! -->
 <resources>
     <string name="title_app_name">Sequence Hunt</string>
-    <string name="title_welcome">Willkommen in Sequence Hunt!</string>
-    <string name="title_how_to_play">Anleitung für das Spiel</string>
-    <string name="title_history">Geschichte</string>
+    <string name="title_welcome">Willkommen zur Sequence Hunt!</string>
+    <string name="title_how_to_play">Spielanleitung</string>
+    <string name="title_history">Verlauf</string>
     <string name="title_license">Lizenz</string>
     <string name="title_setup">Schwierigkeitsgrad</string>
-    <string name="title_sound_setup">Klingt</string>
-    <string name="message_welcome_initial">\nVielen Dank für die Sequence Hunt.\n</string>
-    <string name="message_welcome_what_is_new">Funktion hinzugefügt, um die Lautstärke für das Spiel ausgewählt erinnern. Wenn die Lautstärke bei der Wiedergabe verändert, wird es beibehalten und wiederhergestellt werden, wenn das Spiel gestartet wird. Die Originalmusik Datenträger wird wiederhergestellt, wenn das Spiel zu verlassen werden. So, wenn der Benutzer es bevorzugen, haben das Spiel Volumen anders sein als andere Klangquellen (wie Musik), wird er / sie nicht zu halten Einstellen der Lautstärke beim Starten und Stoppen des Spiels.\n</string>
-    <string name="message_welcome_ending">Wenn Sie irgendwelche Probleme mit dem Spiel den Betrieb oder Vorschläge für Verbesserungen zögern Sie bitte nicht mich zu kontaktieren (David Read, David.Read@monead.com) gefallen. Kontakt Informationen auch finden, mit dem "Info"-Menü.\n\nHinweise können jederzeit, indem Sie das Spiel-Menü und wählen Sie betrachten die "Spielregeln"-Option.\n\nMöchten Sie die Wiedergabe beginnen oder lesen Sie die Anweisungen?\n\n</string> 
-    <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nDer Source-Code befindet sich unter: https://github.com/DaveRead/SequenceHunt\n\nDieses Programm ist freie Software unter der GNU Affero General Public License veröffentlicht. Sehen Sie sich die Lizenz-Menü-Option für die Voll-Lizenz.</string> 
+    <string name="title_sound_setup">Töne</string>
+    <string name="message_welcome_initial">\nVielen Dank dass sie sich für Sequence Hunt entschieden haben.\n</string>
+    <string name="message_welcome_what_is_new">Danke Nicolas Patzelt zur Verbesserung der deutschen Übersetzungen im Spiel verwendet.\n</string>
+    <string name="message_welcome_ending">Haben Sie irgendwelche Probleme mit dem Spiel oder Vorschläge für Verbesserungen zögern Sie bitte nicht mich zu kontaktieren (David Read, David.Read@monead.com). Kontaktinformationen finden sie auch im "Info"-Menü.\n\nHinweise können jederzeit angezeigt werden, indem Sie das Spiel-Menü aufrufen und die "Spielregeln"-Option wählen.\n\nMöchten Sie das Spiel beginnen oder die Anweisungen lesen?\n\n</string> 
+    <string name="message_about">David Read\nDavid.Read@monead.com\nwww.monead.com\n\nDer Source-Code befindet sich unter: https://github.com/DaveRead/SequenceHunt\n\nDieses Programm ist freie Software unter der GNU Affero General Public License veröffentlicht. Für die ganze Lizen wählen sie das Lizenz-Menü.</string> 
     <string name="message_undefined">undefiniert</string>
     <string name="message_win">Herzlichen Glückwunsch! Sie haben gewonnen!</string>
-    <string name="message_lose">Leider verloren Sie!</string>
+    <string name="message_lose">Sie haben leider verloren!</string>
     <string name="message_pattern_was">Das Muster war</string>
     <string name="question_play_again">Nochmal spielen?</string>
     <string name="button_yes">Ja</string>
@@ -24,7 +25,7 @@
     <string name="button_close">Schließen</string>
     <string name="button_copy_to_clipboard">In die Zwischenablage kopieren</string>
     <string name="button_play">Spielen</string>
-    <string name="button_read_instructions">Lesen Sie die Anweisungen</string>
+    <string name="button_read_instructions">Anweisungen lesen</string>
     <string name="color_black">Schwarz</string>
     <string name="color_blue">Blau</string>
     <string name="color_green">Grün</string>
@@ -43,7 +44,7 @@
     <string name="radiobutton_sound_on">Eingeschaltet</string>
     <string name="radiobutton_sound_off">Ausgeschaltet</string>
     <string name="menu_how_to_play">Wie spielt man</string>
-    <string name="menu_setup">Konfigurieren</string>
+    <string name="menu_setup">Einstellungen</string>
     <string name="menu_new_game">Neues Spiel</string>
     <string name="menu_quit">Beenden</string>
     <string name="menu_about">Über</string>
@@ -57,26 +58,26 @@
     <string name="label_stats_colors">Farbauswahl\n(Überprüfung Zufälligkeit)</string>
     <string name="label_stats_num_games">Spiele Gesamt</string>
     <string name="label_stats_num_won">Gewonnene Spiele</string>
-    <string name="label_stats_num_lost">Spiele Verlieren</string>
-    <string name="label_stats_num_quit">Spiele Gab</string>
-    <string name="label_stats_num_easy">Einfaches Spiel</string>
+    <string name="label_stats_num_lost">Verlorene Spiele</string>
+    <string name="label_stats_num_quit">Aufgegebene Spiele</string>
+    <string name="label_stats_num_easy">Einfache Spiele</string>
     <string name="label_stats_num_hard">Schwierige Spiele</string>
     <string name="label_stats_avg_tries_per_game">Durchschnittliche Versuche/Spiele</string>
     <string name="label_stats_avg_time_per_game_won">Durchschnittliche Zeit/Gewonnene Spiele</string>
-    <string name="label_stats_avg_time_per_game_lost">Durchschnittliche Zeit/Spiele Verlieren</string>
-    <string name="label_stats_total_tries">Insgesamt Versuche</string>
-    <string name="label_stats_total_time_games_won">Gesamtzeit auf Gewonnene Spiele</string>
-    <string name="label_stats_total_time_games_lost">Gesamtzeit auf Spiele Verlieren</string>
+    <string name="label_stats_avg_time_per_game_lost">Durchschnittliche Zeit/Verlorene Spiele</string>
+    <string name="label_stats_total_tries">Versuche Insgesamt</string>
+    <string name="label_stats_total_time_games_won">Gesamtzeit der Gewonnene Spiele</string>
+    <string name="label_stats_total_time_games_lost">Gesamtzeit der Verlorenen Spiele</string>
     <string name="label_runtime_information">Runtime Information</string>
     <string name="label_sequence_length">Sequenzlänge</string>
-    <string name="message_report_program_and_version_names">Abgerufen Programm und die Version Namen</string>
-    <string name="errormessage_program_or_version_name">Programm kann nicht Name oder Name Version abrufen</string>
-    <string name="errormessage_model_read_failed">Konnte Modell laden</string>
-    <string name="errormessage_model_write_failed">Konnte Modell schreiben</string>
-    <string name="errormessage_model_input_file_close_failed">Konnte Eingang Modell Datei schließen</string>
-    <string name="errormessage_model_output_file_close_failed">Konnte Output-Modell Datei schließen</string>
-    <string name="errormessage_stats_read_failed">Fehler beim Spiel Statistiken Last</string>
-    <string name="errormessage_stats_write_failed">Fehler beim Spiel Statistiken schreiben</string>
-    <string name="errormessage_stats_input_file_close_failed">Konnte Eingang Spielstatistiken Datei schließen</string>
-    <string name="errormessage_stats_output_file_close_failed">Konnte Ausgang Spielstatistiken Datei schließen</string>
+    <string name="message_report_program_and_version_names">Abgerufenes Programm und Name der Version</string>
+    <string name="errormessage_program_or_version_name">Kann nicht Programmname oder Name Version abrufen</string>
+    <string name="errormessage_model_read_failed">Konnte Modell nicht laden</string>
+    <string name="errormessage_model_write_failed">Konnte Modell nicht schreiben</string>
+    <string name="errormessage_model_input_file_close_failed">Konnte Modell-Eingang-Datei nicht schließen</string>
+    <string name="errormessage_model_output_file_close_failed">Konnte Modell-Output-Datei nicht schließen</string>
+    <string name="errormessage_stats_read_failed">Fehler beim laden der Spielstatistiken</string>
+    <string name="errormessage_stats_write_failed">Fehler beim schreiben der Spielstatistiken</string>
+    <string name="errormessage_stats_input_file_close_failed">Konnte Spielstatistiken-Eingang-Datei nicht schließen</string>
+    <string name="errormessage_stats_output_file_close_failed">Konnte Spielstatistiken-Ausgang-Datei nicht schließen</string>
 </resources>
