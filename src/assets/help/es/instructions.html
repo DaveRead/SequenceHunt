@@ -1,0 +1,171 @@
+<html>
+
+<!-- es -->
+
+<body bgcolor="#ccffcc">
+
+<font color="#102010">
+
+<hr/>
+<p>(Nota de traducción:.. Me disculpo por cualquier gramática 
+pobre no soy un hablante nativo de esta lengua, así que 
+se basó en un programa de traducción Si han sugerido 
+mejoras a las palabras y la gramática en el juego, 
+Le agradecería que me deja saber. Gracias.)</p>
+<hr/>
+
+<h1>Objetivo</h1>
+
+<p><strong>Sequence Hunt</strong> 
+requiere que el jugador que encontrar una secuencia de colores.
+Cada intento de adivinar la secuencia que se llama <strong>un intento</strong>.
+Hay cuatro a ocho (seleccionado por el usuario) las posiciones y cada 
+posición puede tener cualquiera de
+seis colores en el mismo (Negro, Azul, Verde, Rojo, Blanco o Amarillo).
+Un color puede aparecer más de una vez y, obviamente, no todos 
+los colores que se utilizarán en una secuencia determinada.
+</p><p>
+El juego permite hasta 10 intentos para encontrar la secuencia. 
+Cada intento se representa como una fila de
+círculos.
+En respuesta a un intento, el jugador cuenta con pistas para 
+ayudar a identificar los colores correctos e incorrectos y 
+las posiciones de que tratan. Vea la sección <strong><em>de pistas</em></strong> de 
+la información en la comprensión de los significados pista.
+</p>
+
+<h1>Intentos</h1>
+<p>
+El jugador entra en un patrón de colores (recuerde, un color puede
+utilizar más de una vez), como supongo que él o ella. 
+Una vez que un color se ha introducido en cada posición en 
+la fila de la conjetura puede ser presentado. 
+Una vez presentadas, las pistas se mostrarán.
+</p><p>
+Para entrar en un color, el jugador o hace clic en uno de los 6
+círculos de colores en la parte inferior de la junta o utiliza el teclado
+para entrar en una carta que representa un color.
+</p>
+
+<center>
+<table border="1">
+<tr><th>Color</th><th>Carta</th></tr>
+<tr><td align="center">Amarillo</td><td align="center">A</td></tr>
+<tr><td align="center">Azul</td><td align="center">Z</td></tr>
+<tr><td align="center">Blanco</td><td align="center">B</td></tr>
+<tr><td align="center">Negro</td><td align="center">N</td></tr>
+<tr><td align="center">Rojo</td><td align="center">R</td></tr>
+<tr><td align="center">Verde</td><td align="center">V</td></tr>
+</table>
+</center>
+
+<p>Si se comete un error cuando el usuario entra supongo que 
+le afecte, la tecla de borrar o eliminar el símbolo 
+(ver imagen abajo) en la parte inferior del tablero de 
+juego se puede utilizar para eliminar las conjeturas 
+(antes de presentar el intento).</p>
+
+<p>Las pruebas se presenta al presionar la tecla enter o el 
+presente símbolo (ver imagen abajo) en la parte inferior 
+del tablero de juego.</p>
+
+<center>
+<table border="1">
+<tr><th>Imagen</th><th>Significado</th></tr>
+<tr><td align="center"><img src="../delete_entry.png" alt="segundo por la derecha"/></td><td >Eliminar entró color</td></tr>
+<tr><td align="center"><img src="../submit_try.png" alt="Más a la derecha la imagen"/></td><td >Envíe el intento</td></tr>
+</table>
+</center>
+
+<h1>Envíe el intento</h1>
+
+<p>Las pistas se informó a la izquierda de cada intento 
+consecutivo. Cuando un color adivinado se encuentra en 
+la posición correcta de la pista será un diamante. Por 
+lo tanto, el objetivo final del jugador 
+(de ganar el juego) es conseguir que todas 
+las pistas para informar de un diamante.</p>
+  
+<p>Si el color correcto, pero se utiliza en la posición 
+incorrecta de un triángulo se muestra. Si el color 
+es incorrecta, un círculo con una 'X' a través de 
+él se muestra. Habrá una pista para cada posición en la secuencia.</p>
+
+<h2>Pista formas</h2>
+<table border="1">
+<tr><th>Forma</th><th>Significado</th></tr>
+<tr><td valign="center" align="center"><img src="../correct.png" alt="Diamante"/></td>
+<td>Un diamante indica que hay un color en la posición correcta</td></tr>
+<tr><td valign="center" align="center"><img src="../incorrect_position.png" alt="Triángulo"/></td>
+<td>Un triángulo indica que el color se produce en la secuencia, pero en una posición diferente</td></tr>
+<tr><td valign="center" align="center"><img src="../incorrect.png" alt="Círculo con una X en el mismo"/></td>
+<td>El círculo con una "X" a través de él indica que el color no se produce (de nuevo) en la secuencia</td></tr>
+</table>
+
+<p>Dependiendo del nivel de dificultad del juego 
+(ver la sección <strong><em>de Nivel de dificultad</em></strong>) las pistas 
+aparecen en una de dos maneras.</p>
+
+<h2>Fácil</h2>
+
+<p>Si el nivel de dificultad está en <strong>fácil</strong> entonces
+las pistas del diamante y el triángulo se llenará con sus
+asociados colores. Por ejemplo, si un diamante de 
+color rojo se muestra, significa que una de las 
+conjeturas rojo está en la posición correcta. Si un 
+triángulo amarillo se muestra que significaría que 
+una conjetura amarilla estaba en la posición 
+incorrecta de la fila.</p>
+
+<h2>Difícil</h2>
+
+<p>Si el nivel de dificultad está en <strong>difícil</strong> entonces
+las pistas son siempre gris, añadiendo un reto para averiguar
+los colores y las posiciones son correctas e incorrectas.</p>
+
+<h1>Nivel de Dificultad</h1>
+
+<p>Use el menú para seleccionar <strong>Configurar</strong>. 
+Esto permite que
+el reproductor para cambiar de <strong>fácil</strong>
+y los niveles de dificultad <strong>difícil</strong>
+(ver la sección <strong><em>de pistas</em></strong> para
+detalles sobre el propósito de esta configuración).</p>
+
+<h1>Sonidos</h1>
+
+<p>Use el menú para seleccionar <strong>Configurar</strong>. 
+Esto permite al jugador para activar o desactivar la
+efectos de sonido.</p>
+
+<h1>Secuencia de Longitud</h1>
+
+<p>El jugador puede ajustar la longitud de la secuencia a 
+un valor de 4 a 8.
+Secuencias más largas son más difíciles de descubrir en el
+10 intentos permitidos.<p>
+
+<p>Para establecer la longitud de la secuencia, use 
+el menú del juego para seleccionar
+<strong>Configurar</strong>. La pantalla de configuración contiene una
+lista desplegable que permite ajustar la longitud de la secuencia.
+<em><strong>Si un juego está en marcha cuando el
+longitud de la secuencia se cambia, el viejo juego finalizará y
+un nuevo juego se iniciará.</strong></em></p>
+ 
+<a name="samples"/>
+<h1>Ejemplo de Juegos</h1>
+
+<p>Juegos de ejemplo representan un conjunto de 
+intentos y explicar las pistas y el razonamiento 
+para encontrar la secuencia correcta.</p>
+<ul>
+<li><a href="samplegame_easy.html">Dificultad Fácil de muestra del juego</a>
+<li><a href="samplegame_hard.html">Dificultad Difícil de muestra del juego</a>
+</ul>
+
+</font>
+
+</body>
+
+</html>

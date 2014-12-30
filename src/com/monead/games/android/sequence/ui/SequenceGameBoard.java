@@ -772,7 +772,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
      * 
      * @param color The chosen color
      */
-    @Override
+
     public final void notifyColorChoice(final int color) {
         gameModel.addGuess(color);
         invalidate();
@@ -781,7 +781,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
     /**
      * Handle a delete choice. (e.g. remove the last color entered)
      */
-    @Override
+
     public final void notifyDeleteChoice() {
         gameModel.removeLastGuess();
         invalidate();
@@ -790,7 +790,7 @@ public class SequenceGameBoard extends View implements ColorChoiceListener,
     /**
      * Handle a try submit request.
      */
-    @Override
+
     public final void notifyTry() {
         gameModel.submitGuess();
         invalidate();

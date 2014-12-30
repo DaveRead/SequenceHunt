@@ -1,0 +1,90 @@
+<html>
+
+<body bgcolor="#ccffcc">
+<hr>
+<!-- <a href="instructions.html#samples">Back to Instructions</a> -->
+<a href="instructions.html">Back to Instructions</a>
+<hr>
+
+<h1>Sequence Hunt - Sample Game</h1>
+<h2>Difficulty: Hard</h2>
+
+<p>With the difficulty set to hard, the clues will not indicate the 
+color associated with the shape.  This makes the determination
+if which colors are part of the solution more challenging.</p>
+
+<p>Below is a depiction of a game along with an explanation
+of how to read the clues.</p>
+
+<p><em>Note: in the descriptions each try is represented as having 4 positions.  
+The positions are numbered from 1 to 4 as presented from left to right.</em></p>
+
+<table border="1">
+<tr><th>Try Depiction</th><th>Explanation</th></tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.1.png" height="17" width="87" alt="Entered: yellow, yellow, red, red  Clues: diamond, triangle and two grayed Xs"/></td>
+<td>
+<p>The player enters two yellows and 2 reds.  The clues report one diamond, one triangle and two grayed Xs.  
+From this it is known that one of the following is true:</p>
+<ul>
+<li>There are at least two yellows</li>
+<li>There are at least two reds</li>
+<li>There is one yellow and one red</li>
+</ul>
+<p>The player also knows that one of the colors is in the correct position and one is not.  
+So, if there are two reds, one is in position 3 or 4 and the other would be in position 1 or 2.  
+Similar reasoning can be applied if there are two yellows or a yellow and a red.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.2.png" height="17" width="87" alt="Entered: yellow, red, blue, blue  Clues: triangle and three grayed Xs"/></td>
+<td>
+<p>The player takes a guess that there is one yellow and one red, 
+entering one yellow and one red along with introducing a new color, blue.</p>  
+<p>The clues report one triangle and 3 grayed Xs.
+The player now knows that there must be at least two yellows or two reds 
+and that there are no blues.</p>  
+<p>This has to be true since the first try 
+reported two correct colors (one in the incorrect position) and those 
+colors were yellow and red.  Since in this try the player included a 
+yellow and a red, at least one of them had to be present.  
+Now the player needs to figure out if there are at least two yellows or two reds, along 
+with finding any other colors that may be in the sequence.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.3.png" height="17" width="87" alt="Entered: yellow, green, yellow, green  Clues: three triangles and a grayed X"/></td>
+<td>
+<p>The player guesses yellow as the color that was correct in the first try.  
+Since the first try reported that one color was in the correct position and 
+one incorrect, the player keeps one yellow in position 1 and places the 
+other in position 3.  The player includes a new color, green, in positions 2 and 4.</p>
+<p>The clues report three triangles and a grayed X.  
+This means that the player has found three correct colors, all in incorrect positions.</p>  
+<p>The player now knows that there are at least two yellows and one green.  
+This is guaranteed since the first two trys proved that there were at least two yellows or two reds.  
+If there were two reds then try three could not report three correct colors (there 
+would be no yellow and at most the two greens).  Now the task is to figure out the 
+correct positions of the known colors (two yellows and one green) and find 
+the fourth position's color.</p>
+</td>
+</tr>
+<tr><td valign="top"><img src="../SequenceSampleGame-HardMode.4.png" height="17" width="87" alt="Entered: white, yellow, green, yellow"/></td>
+<td>
+<p>From the previous trys the player knows where the yellows have to go.  
+Only positions 2 and 4 are options, since there are at least two yellows 
+and they are not in positions 1 and 3.  The green is not in position 2 or 4 
+so it is either in position 1 or 3.</p>
+<p>As a guess the player places the green in position 3.  
+Searching for the fourth position/color the player tries a white in position 1.</p>  
+<p><em>This turns out to be the correct sequence.</em></p>
+</td>
+</tr>
+</table>
+<img src="../SequenceSampleGame-HardMode.5.png" alt="Congratulations! You Won!"/>
+
+<hr>
+<!-- <a href="instructions.html#samples">Back to Instructions</a> -->
+<a href="instructions.html">Back to Instructions</a>
+<hr>
+
+</body>
+
+</html>
