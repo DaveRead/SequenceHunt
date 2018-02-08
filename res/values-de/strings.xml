@@ -67,7 +67,7 @@
 <string name="label_stats_total_tries">Versuche insgesamt</string>
 <string name="label_stats_total_time_games_won">Gesamtzeit der gewonnenen Spiele</string>
 <string name="label_stats_total_time_games_lost">Gesamtzeit der verlorenen Spiele</string>
-<string name="label_runtime_information"Laufzeitinformationen</string>
+<string name="label_runtime_information">Laufzeitinformationen</string>
 <string name="label_sequence_length">Sequenzlänge</string>
 <string name="message_report_program_and_version_names">Aufgerufenes Programm und Name der Version</string>
 <string name="errormessage_program_or_version_name">Kann Programm- oder Versionsname nicht abrufen</string>
