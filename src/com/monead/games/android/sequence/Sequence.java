@@ -286,7 +286,7 @@ public class Sequence extends Activity implements OnTouchListener {
     // Set Runnable to remove splash screen just in case
     final Handler handler = new Handler();
     handler.postDelayed(new Runnable() {
-      @Override
+
       public void run() {
         removeSplashScreen();
       }
@@ -1363,7 +1363,7 @@ public class Sequence extends Activity implements OnTouchListener {
    * 
    * @return Whether the event was handled
    */
-  @Override
+
   public final boolean onTouch(final View v, final MotionEvent event) {
     boolean processed;
 

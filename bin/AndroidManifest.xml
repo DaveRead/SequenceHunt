@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.monead.games.android.sequence"
+      android:versionName="01.07.05" android:versionCode="23">
+      
+    <!-- Standard version -->
+     <application android:icon="@drawable/ic_launcher_sequence" 
+    		android:label="@string/title_app_name">
+        <activity android:name=".Sequence"
+                  android:label="@string/title_app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+	<!-- Korean version, remember to put a "k" on the end of the version number -->
+    <!-- <application android:icon="@drawable/korean_ic_launcher_sequence" 
+    		android:label="@string/title_app_name">
+        <activity android:name=".Sequence"
+                  android:label="@string/title_app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application> -->
+	
+	<uses-sdk android:targetSdkVersion="8" 
+			android:minSdkVersion="4">
+	</uses-sdk>
+</manifest> 
